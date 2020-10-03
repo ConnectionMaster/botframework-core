@@ -24,14 +24,12 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
-using Microsoft.BotFramework.Composer.Core;
-using Microsoft.BotFramework.Composer.Core.Settings;
-
-//using Microsoft.BotFramework.Composer.CustomAction;
+using Microsoft.Bot.Runtime;
+using Microsoft.Bot.Runtime.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.BotFramework.Composer.WebAppTemplates
+namespace Microsoft.Bot.Runtime.WebHost
 {
     public class Startup
     {
@@ -184,7 +182,7 @@ namespace Microsoft.BotFramework.Composer.WebAppTemplates
             var removeRecipientMention = settings?.Feature?.RemoveRecipientMention ?? false;
 
             services.AddSingleton<IBot>(s =>
-                new ComposerBot(
+                new RuntimeBot(
                     s.GetService<ConversationState>(),
                     s.GetService<UserState>(),
                     s.GetService<ResourceExplorer>(),

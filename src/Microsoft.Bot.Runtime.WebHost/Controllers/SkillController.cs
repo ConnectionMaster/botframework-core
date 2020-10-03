@@ -9,7 +9,7 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Schema;
 
-namespace Microsoft.BotFramework.Composer.WebAppTemplates.Controllers
+namespace Microsoft.Bot.Runtime.WebHost.Controllers
 {
     /// <summary>
     /// A controller that handles skill replies to the bot.

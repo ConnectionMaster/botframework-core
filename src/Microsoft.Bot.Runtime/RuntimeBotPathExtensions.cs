@@ -9,7 +9,7 @@ namespace Microsoft.Bot.Runtime
     /// <summary>
     /// Bot path adapter, for development environment, use '../../' as the bot path, for deployment and production environment, use 'ComposerDialogs' as bot path
     /// </summary>
-    public static class ComposerBotPathExtensions
+    public static class RuntimeBotPathExtensions
     {
         public static IConfigurationBuilder UseBotPathConverter(this IConfigurationBuilder builder, bool isDevelopment = true)
         {

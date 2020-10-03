@@ -36,6 +36,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\core\Microsoft.Bot.Runtime.csproj" />
+    <ProjectReference Include="..\Microsoft.Bot.Runtime\Microsoft.Bot.Runtime.csproj" />
   </ItemGroup>
 </Project>

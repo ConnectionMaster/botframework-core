@@ -15,7 +15,7 @@ using Microsoft.Bot.Schema;
 
 namespace Microsoft.Bot.Runtime
 {
-    public class ComposerBot : ActivityHandler
+    public class RuntimeBot : ActivityHandler
     {
         private readonly ResourceExplorer resourceExplorer;
         private readonly UserState userState;
@@ -27,7 +27,7 @@ namespace Microsoft.Bot.Runtime
         private readonly string defaultLocale;
         private readonly bool removeRecipientMention;
 
-        public ComposerBot(ConversationState conversationState, UserState userState, ResourceExplorer resourceExplorer, BotFrameworkClient skillClient, SkillConversationIdFactoryBase conversationIdFactory, IBotTelemetryClient telemetryClient, string rootDialog, string defaultLocale, bool removeRecipientMention = false)
+        public RuntimeBot(ConversationState conversationState, UserState userState, ResourceExplorer resourceExplorer, BotFrameworkClient skillClient, SkillConversationIdFactoryBase conversationIdFactory, IBotTelemetryClient telemetryClient, string rootDialog, string defaultLocale, bool removeRecipientMention = false)
         {
             this.conversationState = conversationState;
             this.userState = userState;

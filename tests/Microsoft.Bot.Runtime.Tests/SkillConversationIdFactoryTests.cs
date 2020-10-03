@@ -1,155 +1,107 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Adapters;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Adaptive;
-using Microsoft.Bot.Builder.Dialogs.Declarative;
-using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
-using Microsoft.Bot.Builder.Skills;
-using Microsoft.Bot.Connector.Authentication;
-using Microsoft.Bot.Schema;
-using Microsoft.BotFramework.Composer.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Skills;
+using Microsoft.Bot.Schema;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Microsoft.Bot.Runtime.Tests
 {
     [TestClass]
     public class SkillConversationIdFactoryTests
     {
-        private readonly SkillConversationIdFactory _idFactory = new SkillConversationIdFactory(new MemoryStorage());
-        private string _botId = Guid.NewGuid().ToString("N");
-        private string _skillId = Guid.NewGuid().ToString("N");
+        private const string ServiceUrl = "http://testbot.com/api/messages";
+        private const string SkillId = "skill";
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
+        private string ApplicationId { get; } = Guid.NewGuid().ToString(format: "N");
+
+        private string BotId { get; } = Guid.NewGuid().ToString(format: "N");
+
+        private SkillConversationIdFactory SkillConversationIdFactory { get; } =
+            new SkillConversationIdFactory(new MemoryStorage());
+
+        private static void AssertConversationReference(ConversationReference expected, ConversationReference actual)
         {
+            if (expected == null) { throw new ArgumentNullException(nameof(expected)); }
+            if (actual == null) { throw new ArgumentNullException(nameof(actual)); }
+
+            Assert.IsNotNull(expected.Conversation, "Expected Conversation");
+            Assert.IsNotNull(actual.Conversation, "Actual Conversation");
+
+            Assert.AreEqual(expected.Conversation.Id, actual.Conversation.Id, "Conversation.Id");
+            Assert.AreEqual(expected.ServiceUrl, actual.ServiceUrl, "ServiceUrl");
         }
 
-        [TestMethod]
-        public async Task ShouldCreateCorrectConversationId()
+        private BotFrameworkSkill BuildBotFrameworkSkill()
         {
-            var claimsIdentity = new ClaimsIdentity();
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.AudienceClaim, _botId));
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.AppIdClaim, _skillId));
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.ServiceUrlClaim, "http://testbot.com/api/messages"));
-            var conversationReference = new ConversationReference
+            return new BotFrameworkSkill
+            {
+                AppId = this.ApplicationId,
+                Id = SkillId,
+                SkillEndpoint = new Uri(ServiceUrl)
+            };
+        }
+
+        private static ConversationReference BuildConversationReference()
+        {
+            return new ConversationReference
             {
                 Conversation = new ConversationAccount(id: Guid.NewGuid().ToString("N")),
-                ServiceUrl = "http://testbot.com/api/messages"
+                ServiceUrl = ServiceUrl
             };
+        }
+
+        private static Activity BuildMessageActivity(ConversationReference conversationReference)
+        {
+            if (conversationReference == null) { throw new ArgumentNullException(nameof(conversationReference)); }
 
             var activity = (Activity)Activity.CreateMessageActivity();
             activity.ApplyConversationReference(conversationReference);
-            var skill = new BotFrameworkSkill()
-            {
-                AppId = _skillId,
-                Id = "skill",
-                SkillEndpoint = new Uri("http://testbot.com/api/messages")
-            };
 
-            var options = new SkillConversationIdFactoryOptions
-            {
-                FromBotOAuthScope = _botId,
-                FromBotId = _botId,
-                Activity = activity,
-                BotFrameworkSkill = skill
-            };
-
-            var conversationId = await _idFactory.CreateSkillConversationIdAsync(options, CancellationToken.None);
-            Assert.IsNotNull(conversationId);
+            return activity;
         }
 
         [TestMethod]
-        public async Task ShouldGetConversationReferenceFromConversationId()
+        public async Task SkillConversationIdFactoryHappyPath()
         {
-            var claimsIdentity = new ClaimsIdentity();
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.AudienceClaim, _botId));
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.AppIdClaim, _skillId));
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.ServiceUrlClaim, "http://testbot.com/api/messages"));
-            var conversationReference = new ConversationReference
-            {
-                Conversation = new ConversationAccount(id: Guid.NewGuid().ToString("N")),
-                ServiceUrl = "http://testbot.com/api/messages"
-            };
+            ConversationReference conversationReference = BuildConversationReference();
 
-            var activity = (Activity)Activity.CreateMessageActivity();
-            activity.ApplyConversationReference(conversationReference);
-            var skill = new BotFrameworkSkill()
-            {
-                AppId = _skillId,
-                Id = "skill",
-                SkillEndpoint = new Uri("http://testbot.com/api/messages")
-            };
+            string skillConversationId = await this.SkillConversationIdFactory.CreateSkillConversationIdAsync(
+                options: new SkillConversationIdFactoryOptions
+                {
+                    Activity = BuildMessageActivity(conversationReference),
+                    BotFrameworkSkill = this.BuildBotFrameworkSkill(),
+                    FromBotId = this.BotId,
+                    FromBotOAuthScope = this.BotId,
+                },
+                cancellationToken: CancellationToken.None);
 
-            var options = new SkillConversationIdFactoryOptions
-            {
-                FromBotOAuthScope = _botId,
-                FromBotId = _botId,
-                Activity = activity,
-                BotFrameworkSkill = skill
-            };
+            Assert.IsFalse(
+                string.IsNullOrEmpty(skillConversationId),
+                "Expected a valid skill conversation ID to be created");
 
-            var conversationId = await _idFactory.CreateSkillConversationIdAsync(options, CancellationToken.None);
-            Assert.IsNotNull(conversationId);
+            SkillConversationReference skillConversationReference =
+                await this.SkillConversationIdFactory.GetSkillConversationReferenceAsync(
+                    skillConversationId,
+                    CancellationToken.None);
 
-            var skillConversationRef = await _idFactory.GetSkillConversationReferenceAsync(conversationId, CancellationToken.None);
-            Assert.IsTrue(RefEquals(skillConversationRef.ConversationReference, conversationReference));
-        }
+            AssertConversationReference(conversationReference, skillConversationReference.ConversationReference);
 
-        [TestMethod]
-        public async Task ShouldNotGetReferenceAfterDeleted()
-        {
-            var claimsIdentity = new ClaimsIdentity();
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.AudienceClaim, _botId));
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.AppIdClaim, _skillId));
-            claimsIdentity.AddClaim(new Claim(AuthenticationConstants.ServiceUrlClaim, "http://testbot.com/api/messages"));
-            var conversationReference = new ConversationReference
-            {
-                Conversation = new ConversationAccount(id: Guid.NewGuid().ToString("N")),
-                ServiceUrl = "http://testbot.com/api/messages"
-            };
+            await this.SkillConversationIdFactory.DeleteConversationReferenceAsync(
+                skillConversationId,
+                CancellationToken.None);
 
-            var activity = (Activity)Activity.CreateMessageActivity();
-            activity.ApplyConversationReference(conversationReference);
-            var skill = new BotFrameworkSkill()
-            {
-                AppId = _skillId,
-                Id = "skill",
-                SkillEndpoint = new Uri("http://testbot.com/api/messages")
-            };
+            skillConversationReference = await this.SkillConversationIdFactory.GetSkillConversationReferenceAsync(
+                skillConversationId,
+                CancellationToken.None);
 
-            var options = new SkillConversationIdFactoryOptions
-            {
-                FromBotOAuthScope = _botId,
-                FromBotId = _botId,
-                Activity = activity,
-                BotFrameworkSkill = skill
-            };
-
-            var conversationId = await _idFactory.CreateSkillConversationIdAsync(options, CancellationToken.None);
-            Assert.IsNotNull(conversationId);
-
-            var skillConversationRef = await _idFactory.GetSkillConversationReferenceAsync(conversationId, CancellationToken.None);
-            Assert.IsTrue(RefEquals(skillConversationRef.ConversationReference, conversationReference));
-
-            await _idFactory.DeleteConversationReferenceAsync(conversationId, CancellationToken.None);
-
-            var skillConversationRefAfterDeleted = await _idFactory.GetSkillConversationReferenceAsync(conversationId, CancellationToken.None);
-            Assert.IsNull(skillConversationRefAfterDeleted);
-        }
-
-        private bool RefEquals(ConversationReference ref1, ConversationReference ref2)
-        {
-            return ref1.Conversation.Id == ref2.Conversation.Id && ref1.ServiceUrl == ref2.ServiceUrl;
+            Assert.IsNull(
+                skillConversationReference,
+                "Expected skill conversation reference to be null following deletion");
         }
     }
 }
-

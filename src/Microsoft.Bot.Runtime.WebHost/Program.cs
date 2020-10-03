@@ -3,11 +3,11 @@
 
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.BotFramework.Composer.Core;
+using Microsoft.Bot.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace Microsoft.BotFramework.Composer.WebAppTemplates
+namespace Microsoft.Bot.Runtime.WebHost
 {
     public class Program
     {

@@ -10,10 +10,10 @@
     </None>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet>..\core\Microsoft.BotFramework.Composer.Core.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Microsoft.Bot.Runtime\Microsoft.Bot.Runtime.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>..\core\Microsoft.BotFramework.Composer.Core.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Microsoft.Bot.Runtime\Microsoft.Bot.Runtime.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
@@ -36,6 +36,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\core\Microsoft.BotFramework.Composer.Core.csproj" />
+    <ProjectReference Include="..\core\Microsoft.Bot.Runtime.csproj" />
   </ItemGroup>
 </Project>

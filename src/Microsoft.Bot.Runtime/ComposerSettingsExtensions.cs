@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
-namespace Microsoft.BotFramework.Composer.Core
+namespace Microsoft.Bot.Runtime
 {
     public static class ComposerSettingsExtensions
     {

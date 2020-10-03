@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.BotFramework.Composer.Core
+namespace Microsoft.Bot.Runtime
 {
     public class LuisConfig
     {

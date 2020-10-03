@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet>..\core\Microsoft.BotFramework.Composer.Core.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\src\Microsoft.Bot.Runtime\Microsoft.Bot.Runtime.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>..\core\Microsoft.BotFramework.Composer.Core.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\src\Microsoft.Bot.Runtime\Microsoft.Bot.Runtime.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\azurewebapp\Microsoft.BotFramework.Composer.WebApp.csproj" />
-    <ProjectReference Include="..\core\Microsoft.BotFramework.Composer.Core.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.Bot.Runtime\Microsoft.Bot.Runtime.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.Bot.Runtime.WebHost\Microsoft.Bot.Runtime.WebHost.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet>Microsoft.BotFramework.Composer.Core.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Microsoft.Bot.Runtime.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>Microsoft.BotFramework.Composer.Core.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Microsoft.Bot.Runtime.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

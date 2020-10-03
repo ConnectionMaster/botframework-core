@@ -1,13 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.IO;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.Bot.Builder.AI.QnA;
@@ -24,7 +21,6 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
-using Microsoft.Bot.Runtime;
 using Microsoft.Bot.Runtime.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,75 +31,21 @@ namespace Microsoft.Bot.Runtime.WebHost
     {
         public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
-            this.HostingEnvironment = env;
             this.Configuration = configuration;
         }
 
-        public IWebHostEnvironment HostingEnvironment { get; }
-
         public IConfiguration Configuration { get; }
 
-        public void ConfigureTranscriptLoggerMiddleware(BotFrameworkHttpAdapter adapter, BotSettings settings)
+        public void ConfigureStorage(IServiceCollection services, BotSettings settings)
         {
-            if (ConfigSectionValid(settings?.BlobStorage?.ConnectionString) && ConfigSectionValid(settings?.BlobStorage?.Container))
+            if (BotSettings.ConfigSectionValid(settings?.CosmosDb?.AuthKey))
             {
-                adapter.Use(new TranscriptLoggerMiddleware(new AzureBlobTranscriptStore(settings?.BlobStorage?.ConnectionString, settings?.BlobStorage?.Container)));
-            }
-        }
-
-        public void ConfigureShowTypingMiddleWare(BotFrameworkAdapter adapter, BotSettings settings)
-        {
-            if (settings?.Feature?.UseShowTypingMiddleware == true)
-            {
-                adapter.Use(new ShowTypingMiddleware());
-            }
-        }
-
-        public void ConfigureInspectionMiddleWare(BotFrameworkAdapter adapter, BotSettings settings, IStorage storage)
-        {
-            if (settings?.Feature?.UseInspectionMiddleware == true)
-            {
-                adapter.Use(new InspectionMiddleware(new InspectionState(storage)));
-            }
-        }
-
-        public IStorage ConfigureStorage(BotSettings settings)
-        {
-            IStorage storage;
-            if (ConfigSectionValid(settings?.CosmosDb?.AuthKey))
-            {
-                storage = new CosmosDbPartitionedStorage(settings?.CosmosDb);
+                services.AddScoped<IStorage>(_ => new CosmosDbPartitionedStorage(settings?.CosmosDb));
             }
             else
             {
-                storage = new MemoryStorage();
+                services.AddSingleton<IStorage, MemoryStorage>();
             }
-
-            return storage;
-        }
-
-        public BotFrameworkHttpAdapter GetBotAdapter(IStorage storage, BotSettings settings, UserState userState, ConversationState conversationState, IServiceProvider s, TelemetryInitializerMiddleware telemetryInitializerMiddleware)
-        {
-            var adapter = new BotFrameworkHttpAdapter(new ConfigurationCredentialProvider(this.Configuration));
-
-            adapter
-              .UseStorage(storage)
-              .UseBotState(userState, conversationState)
-              .Use(new RegisterClassMiddleware<IConfiguration>(Configuration))
-              .Use(telemetryInitializerMiddleware);
-
-            // Configure Middlewares
-            ConfigureTranscriptLoggerMiddleware(adapter, settings);
-            ConfigureInspectionMiddleWare(adapter, settings, storage);
-            ConfigureShowTypingMiddleWare(adapter, settings);
-
-            adapter.OnTurnError = async (turnContext, exception) =>
-            {
-                await turnContext.SendActivityAsync(exception.Message).ConfigureAwait(false);
-                await conversationState.ClearStateAsync(turnContext).ConfigureAwait(false);
-                await conversationState.SaveChangesAsync(turnContext).ConfigureAwait(false);
-            };
-            return adapter;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -116,13 +58,6 @@ namespace Microsoft.Bot.Runtime.WebHost
             // Load settings
             var settings = new BotSettings();
             Configuration.Bind(settings);
-
-            // Create the credential provider to be used with the Bot Framework Adapter.
-            services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
-            services.AddSingleton<BotAdapter>(sp => (BotFrameworkHttpAdapter)sp.GetService<IBotFrameworkHttpAdapter>());
-
-            // Register AuthConfiguration to enable custom claim validation.
-            services.AddSingleton<AuthenticationConfiguration>();
 
             // register components.
             ComponentRegistration.Add(new DialogsComponentRegistration());
@@ -158,40 +93,29 @@ namespace Microsoft.Bot.Runtime.WebHost
                 return new TelemetryInitializerMiddleware(httpContextAccessor, telemetryLoggerMiddleware, settings?.Telemetry?.LogActivities ?? false);
             });
 
-            var storage = ConfigureStorage(settings);
+            // Configure Storage and State
+            ConfigureStorage(services, settings);
+            services.AddSingleton<UserState>();
+            services.AddSingleton<ConversationState>();
 
-            services.AddSingleton(storage);
-            var userState = new UserState(storage);
-            var conversationState = new ConversationState(storage);
-            services.AddSingleton(userState);
-            services.AddSingleton(conversationState);
+            // Create the credential provider to be used with the Bot Framework Adapter.
+            services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
+            services.AddSingleton<BotAdapter>(sp => (BotFrameworkHttpAdapter)sp.GetService<IBotFrameworkHttpAdapter>());
 
-            // Configure bot loading path
+            // Register AuthConfiguration to enable custom claim validation.
+            services.AddSingleton<AuthenticationConfiguration>();
+
+            // Adapter
+            services.AddSingleton<IBotFrameworkHttpAdapter, RuntimeAdapter>();
+
+            // ResourceExplorer
             var botDir = settings.Bot;
             var resourceExplorer = new ResourceExplorer().AddFolder(botDir);
-            var rootDialog = GetRootDialog(botDir);
-
-            var defaultLocale = Configuration.GetValue<string>("defaultLanguage") ?? "en-us";
-
+            resourceExplorer.RegisterType<OnQnAMatch>("Microsoft.OnQnAMatch");
             services.AddSingleton(resourceExplorer);
 
-            resourceExplorer.RegisterType<OnQnAMatch>("Microsoft.OnQnAMatch");
-
-            services.AddSingleton<IBotFrameworkHttpAdapter, BotFrameworkHttpAdapter>((s) => GetBotAdapter(storage, settings, userState, conversationState, s, s.GetService<TelemetryInitializerMiddleware>()));
-
-            var removeRecipientMention = settings?.Feature?.RemoveRecipientMention ?? false;
-
-            services.AddSingleton<IBot>(s =>
-                new RuntimeBot(
-                    s.GetService<ConversationState>(),
-                    s.GetService<UserState>(),
-                    s.GetService<ResourceExplorer>(),
-                    s.GetService<BotFrameworkClient>(),
-                    s.GetService<SkillConversationIdFactoryBase>(),
-                    s.GetService<IBotTelemetryClient>(),
-                    rootDialog,
-                    defaultLocale,
-                    removeRecipientMention));
+            // Bot
+            services.AddSingleton<IBot, RuntimeBot>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -199,32 +123,12 @@ namespace Microsoft.Bot.Runtime.WebHost
         {
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseNamedPipes(System.Environment.GetEnvironmentVariable("APPSETTING_WEBSITE_SITE_NAME") + ".directline");
             app.UseWebSockets();
             app.UseRouting()
                .UseEndpoints(endpoints =>
                {
                    endpoints.MapControllers();
                });
-        }
-
-        private static bool ConfigSectionValid(string val)
-        {
-            return !string.IsNullOrEmpty(val) && !val.StartsWith('<');
-        }
-
-        private string GetRootDialog(string folderPath)
-        {
-            var dir = new DirectoryInfo(folderPath);
-            foreach (var f in dir.GetFiles())
-            {
-                if (f.Extension == ".dialog")
-                {
-                    return f.Name;
-                }
-            }
-
-            throw new Exception($"Can't locate root dialog in {dir.FullName}");
         }
     }
 }

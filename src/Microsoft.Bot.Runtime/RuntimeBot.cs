@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
+using System.IO;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading;
@@ -12,33 +14,48 @@ using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
+using Microsoft.Bot.Runtime.Settings;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Bot.Runtime
 {
     public class RuntimeBot : ActivityHandler
     {
-        private readonly ResourceExplorer resourceExplorer;
-        private readonly UserState userState;
-        private DialogManager dialogManager;
         private readonly ConversationState conversationState;
+        private readonly string defaultLocale;
+        private DialogManager dialogManager;
         private readonly IStatePropertyAccessor<DialogState> dialogState;
+        private readonly bool removeRecipientMention;
+        private readonly ResourceExplorer resourceExplorer;
         private readonly string rootDialogFile;
         private readonly IBotTelemetryClient telemetryClient;
-        private readonly string defaultLocale;
-        private readonly bool removeRecipientMention;
+        private readonly UserState userState;
 
-        public RuntimeBot(ConversationState conversationState, UserState userState, ResourceExplorer resourceExplorer, BotFrameworkClient skillClient, SkillConversationIdFactoryBase conversationIdFactory, IBotTelemetryClient telemetryClient, string rootDialog, string defaultLocale, bool removeRecipientMention = false)
+        public RuntimeBot(
+            IConfiguration configuration,
+            ConversationState conversationState,
+            UserState userState,
+            ResourceExplorer resourceExplorer,
+            BotFrameworkClient skillClient,
+            SkillConversationIdFactoryBase conversationIdFactory,
+            IBotTelemetryClient telemetryClient)
         {
             this.conversationState = conversationState;
             this.userState = userState;
             this.dialogState = conversationState.CreateProperty<DialogState>("DialogState");
             this.resourceExplorer = resourceExplorer;
-            this.rootDialogFile = rootDialog;
-            this.defaultLocale = defaultLocale;
+            this.defaultLocale = configuration.GetValue<string>("defaultLanguage") ?? "en-us"; ;
             this.telemetryClient = telemetryClient;
-            this.removeRecipientMention = removeRecipientMention;
 
-            LoadRootDialogAsync();
+            // TODO: Could this not be a setting (as opposed to a hard coded location)?
+            this.rootDialogFile = GetRootDialog(configuration["bot"]);
+
+            // TODO: Probably a better way to do this
+            var features = new BotFeatureSettings();
+            configuration.GetSection("feature").Bind(features);
+            this.removeRecipientMention = features.RemoveRecipientMention;
+
+            this.LoadRootDialog();
             this.dialogManager.InitialTurnState.Set(skillClient);
             this.dialogManager.InitialTurnState.Set(conversationIdFactory);
         }
@@ -61,18 +78,32 @@ namespace Microsoft.Bot.Runtime
             await this.userState.SaveChangesAsync(turnContext, false, cancellationToken);
         }
 
-        private void LoadRootDialogAsync()
+        private string GetRootDialog(string folderPath)
         {
-            var rootFile = resourceExplorer.GetResource(rootDialogFile);
-            var rootDialog = resourceExplorer.LoadType<AdaptiveDialog>(rootFile);
+            var dir = new DirectoryInfo(folderPath);
+            foreach (var f in dir.GetFiles())
+            {
+                if (f.Extension == ".dialog")
+                {
+                    return f.Name;
+                }
+            }
+
+            throw new Exception($"Can't locate root dialog in {dir.FullName}");
+        }
+
+        private void LoadRootDialog()
+        {
+            var rootFile = this.resourceExplorer.GetResource(rootDialogFile);
+            var rootDialog = this.resourceExplorer.LoadType<AdaptiveDialog>(rootFile);
             this.dialogManager = new DialogManager(rootDialog)
                                 .UseResourceExplorer(resourceExplorer)
                                 .UseLanguageGeneration()
                                 .UseLanguagePolicy(new LanguagePolicy(defaultLocale));
 
-            if (telemetryClient != null)
+            if (this.telemetryClient != null)
             {
-                dialogManager.UseTelemetry(this.telemetryClient);
+                this.dialogManager.UseTelemetry(this.telemetryClient);
             }
         }
     }

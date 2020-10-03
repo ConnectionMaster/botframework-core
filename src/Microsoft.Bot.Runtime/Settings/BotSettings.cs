@@ -24,6 +24,11 @@ namespace Microsoft.Bot.Runtime.Settings
 
         public string Bot { get; set; }
 
+        public static bool ConfigSectionValid(string val)
+        {
+            return !string.IsNullOrEmpty(val) && !val.StartsWith("<");
+        }
+
         public class BlobStorageConfiguration
         {
             public string ConnectionString { get; set; }

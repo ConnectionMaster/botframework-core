@@ -6,6 +6,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Bot.Core
 {
+    /*
+     * TODO: Refactor bot path adapter
+     * BODY: Runtime should consume bot path value through application setting, per environment.
+     */
     /// <summary>
     /// Bot path adapter, for development environment, use '../../' as the bot path, for deployment and production environment, use 'ComposerDialogs' as bot path
     /// </summary>

@@ -49,7 +49,7 @@ namespace Microsoft.Bot.Core
 
             /*
              * TODO: Runtime should get the root dialog path through application settings rather than hard-coded location
-             * BODY: Define and implement a method for getting the root dialog path through application settings, per environment.
+             * BODY: Define and implement a method for getting the root dialog path through application settings.
              */
             this.rootDialogFile = GetRootDialog(configuration["bot"]);
 

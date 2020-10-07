@@ -20,7 +20,7 @@ namespace Microsoft.Bot.Core
             var settings = new Dictionary<string, string>();
             if (isDevelopment)
             {
-                settings["bot"] = "../../";
+                settings["bot"] = "../../../";
             }
             else
             {

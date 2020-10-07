@@ -6,7 +6,7 @@ using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Builder.Dialogs;
 using Newtonsoft.Json;
 
-namespace Microsoft.BotFramework.Composer.CustomAction
+namespace Microsoft.Bot.Runtime.CustomAction
 {
     /// <summary>
     /// Custom command which takes takes 2 data bound arguments (arg1 and arg2) and multiplies them returning that as a databound result.

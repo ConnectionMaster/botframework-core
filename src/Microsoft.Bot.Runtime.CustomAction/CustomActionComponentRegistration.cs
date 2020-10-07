@@ -5,7 +5,7 @@ using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Microsoft.BotFramework.Composer.CustomAction
+namespace Microsoft.Bot.Runtime.CustomAction
 {
     public class CustomActionComponentRegistration : ComponentRegistration, IComponentDeclarativeTypes
     {

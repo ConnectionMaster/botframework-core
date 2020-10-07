@@ -10,7 +10,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Skills;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Bot.Runtime
+namespace Microsoft.Bot.Core
 {
     /// <summary>
     /// A <see cref="SkillConversationIdFactory"/> that uses <see cref="IStorage"/> to store

@@ -5,14 +5,14 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
 using Microsoft.Bot.Builder.Integration.ApplicationInsights.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
-using Microsoft.Bot.Runtime.Settings;
+using Microsoft.Bot.Core.Settings;
 using Microsoft.Extensions.Configuration;
 
-namespace Microsoft.Bot.Runtime
+namespace Microsoft.Bot.Core
 {
-    public class RuntimeAdapter : BotFrameworkHttpAdapter
+    public class CoreBotAdapter : BotFrameworkHttpAdapter
     {
-        public RuntimeAdapter(
+        public CoreBotAdapter(
                 IConfiguration configuration,
                 IStorage storage,
                 UserState userState,

@@ -14,12 +14,12 @@ using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
-using Microsoft.Bot.Runtime.Settings;
+using Microsoft.Bot.Core.Settings;
 using Microsoft.Extensions.Configuration;
 
-namespace Microsoft.Bot.Runtime
+namespace Microsoft.Bot.Core
 {
-    public class RuntimeBot : ActivityHandler
+    public class CoreBot : ActivityHandler
     {
         private readonly ConversationState conversationState;
         private readonly string defaultLocale;
@@ -31,7 +31,7 @@ namespace Microsoft.Bot.Runtime
         private readonly IBotTelemetryClient telemetryClient;
         private readonly UserState userState;
 
-        public RuntimeBot(
+        public CoreBot(
             IConfiguration configuration,
             ConversationState conversationState,
             UserState userState,

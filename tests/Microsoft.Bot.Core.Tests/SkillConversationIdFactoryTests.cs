@@ -9,7 +9,7 @@ using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.Bot.Runtime.Tests
+namespace Microsoft.Bot.Core.Tests
 {
     [TestClass]
     public class SkillConversationIdFactoryTests

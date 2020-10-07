@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.Bot.Runtime\Microsoft.Bot.Runtime.csproj" />
-    <ProjectReference Include="..\..\src\Microsoft.Bot.Runtime.WebHost\Microsoft.Bot.Runtime.WebHost.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.Bot.Core\Microsoft.Bot.Core.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.Bot.Runtime\Microsoft.Bot.Core.csproj" />
   </ItemGroup>
 
 </Project>

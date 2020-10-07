@@ -4,7 +4,7 @@
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Bot.Builder.Azure;
 
-namespace Microsoft.Bot.Runtime.Settings
+namespace Microsoft.Bot.Core.Settings
 {
     public class BotSettings
     {

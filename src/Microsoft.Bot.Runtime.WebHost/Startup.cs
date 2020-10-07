@@ -21,7 +21,8 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
-using Microsoft.Bot.Runtime.Settings;
+using Microsoft.Bot.Core;
+using Microsoft.Bot.Core.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -106,7 +107,7 @@ namespace Microsoft.Bot.Runtime.WebHost
             services.AddSingleton<AuthenticationConfiguration>();
 
             // Adapter
-            services.AddSingleton<IBotFrameworkHttpAdapter, RuntimeAdapter>();
+            services.AddSingleton<IBotFrameworkHttpAdapter, CoreBotAdapter>();
 
             // ResourceExplorer
             var botDir = settings.Bot;
@@ -115,7 +116,7 @@ namespace Microsoft.Bot.Runtime.WebHost
             services.AddSingleton(resourceExplorer);
 
             // Bot
-            services.AddSingleton<IBot, RuntimeBot>();
+            services.AddSingleton<IBot, CoreBot>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

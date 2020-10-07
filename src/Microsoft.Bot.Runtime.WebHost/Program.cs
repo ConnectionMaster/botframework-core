@@ -3,7 +3,7 @@
 
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Bot.Runtime;
+using Microsoft.Bot.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 

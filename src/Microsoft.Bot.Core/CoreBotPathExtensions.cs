@@ -4,12 +4,12 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 
-namespace Microsoft.Bot.Runtime
+namespace Microsoft.Bot.Core
 {
     /// <summary>
     /// Bot path adapter, for development environment, use '../../' as the bot path, for deployment and production environment, use 'ComposerDialogs' as bot path
     /// </summary>
-    public static class RuntimeBotPathExtensions
+    public static class CoreBotPathExtensions
     {
         public static IConfigurationBuilder UseBotPathConverter(this IConfigurationBuilder builder, bool isDevelopment = true)
         {

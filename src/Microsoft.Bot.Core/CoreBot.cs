@@ -47,12 +47,23 @@ namespace Microsoft.Bot.Core
             this.defaultLocale = configuration.GetValue<string>("defaultLanguage") ?? "en-us"; ;
             this.telemetryClient = telemetryClient;
 
-            // TODO: Could this not be a setting (as opposed to a hard coded location)?
+            /*
+             * TODO: Runtime should get the root dialog path through application settings rather than hard-coded location
+             * BODY: Define and implement a method for getting the root dialog path through application settings, per environment.
+             */
             this.rootDialogFile = GetRootDialog(configuration["bot"]);
 
-            // TODO: Probably a better way to do this
+            /*
+             * TODO: Runtime shouldn't bind bot feature settings to hard-coded class
+             * BODY: Define and implement a replacement for today's implementation of BotFeatureSettings.
+             */
             var features = new BotFeatureSettings();
             configuration.GetSection("feature").Bind(features);
+
+            /*
+             * TODO: Define and implement replacement of RemoveRecipientMention feature
+             * BODY: RemoveRecipientMention appears to be a Teams-related Activity extension that removes @mentions in , this should be decoupled from the core runtime and available as a middleware. 
+             */
             this.removeRecipientMention = features.RemoveRecipientMention;
 
             this.LoadRootDialog();

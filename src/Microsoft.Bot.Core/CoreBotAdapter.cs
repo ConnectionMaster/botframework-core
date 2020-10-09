@@ -1,57 +1,38 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Azure;
-using Microsoft.Bot.Builder.Integration.ApplicationInsights.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Core.Builders.Middleware;
 using Microsoft.Bot.Core.Settings;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.Bot.Core
 {
     public class CoreBotAdapter : BotFrameworkHttpAdapter
     {
         public CoreBotAdapter(
-                IConfiguration configuration,
-                IStorage storage,
-                UserState userState,
-                ConversationState conversationState,
-                TelemetryInitializerMiddleware telemetryInitializerMiddleware)
+            IServiceProvider services,
+            IConfiguration configuration,
+            IOptions<CoreBotAdapterOptions> options)
             : base(configuration)
         {
-            this.UseStorage(storage);
+            var conversationState = services.GetService<ConversationState>();
+            var userState = services.GetService<UserState>();
+
+            this.UseStorage(services.GetService<IStorage>());
             this.UseBotState(userState, conversationState);
-            Use(new RegisterClassMiddleware<IConfiguration>(configuration));
+            this.Use(new RegisterClassMiddleware<IConfiguration>(configuration));
 
-            Use(telemetryInitializerMiddleware);
-
-            var features = new BotFeatureSettings();
-            configuration.GetSection("feature").Bind(features);
-
-            var blobStorage = new BlobStorageConfiguration();
-            configuration.GetSection("blobStorage").Bind(blobStorage);
-
-            if (BotSettings.ConfigSectionValid(blobStorage?.ConnectionString) &&
-                BotSettings.ConfigSectionValid(blobStorage?.Container))
+            foreach (IMiddlewareBuilder middleware in options.Value.Middleware)
             {
-                Use(new TranscriptLoggerMiddleware(
-                    new AzureBlobTranscriptStore(
-                        blobStorage?.ConnectionString,
-                        blobStorage?.Container)));
+                this.Use(middleware.Build(services, configuration));
             }
 
-            if (features.UseInspectionMiddleware)
-            {
-                Use(new InspectionMiddleware(new InspectionState(storage)));
-            }
-
-            if (features.UseShowTypingMiddleware)
-            {
-                Use(new ShowTypingMiddleware());
-            }
-
-            OnTurnError = async (turnContext, exception) =>
+            this.OnTurnError = async (turnContext, exception) =>
             {
                 await turnContext.SendActivityAsync(exception.Message).ConfigureAwait(false);
                 await conversationState.ClearStateAsync(turnContext).ConfigureAwait(false);

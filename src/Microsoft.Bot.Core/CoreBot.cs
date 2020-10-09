@@ -16,6 +16,8 @@ using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Core.Settings;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.Bot.Core
 {
@@ -32,43 +34,54 @@ namespace Microsoft.Bot.Core
         private readonly UserState userState;
 
         public CoreBot(
-            IConfiguration configuration,
+            /*IConfiguration configuration,
             ConversationState conversationState,
             UserState userState,
             ResourceExplorer resourceExplorer,
             BotFrameworkClient skillClient,
             SkillConversationIdFactoryBase conversationIdFactory,
-            IBotTelemetryClient telemetryClient)
+            IBotTelemetryClient telemetryClient*/
+            IServiceProvider services,
+            IConfiguration configuration,
+            IOptions<CoreBotOptions> options)
         {
-            this.conversationState = conversationState;
-            this.userState = userState;
+            //this.conversationState = conversationState;
+            //this.userState = userState;
+            //this.dialogState = conversationState.CreateProperty<DialogState>("DialogState");
+            //this.resourceExplorer = resourceExplorer;
+            //this.defaultLocale = configuration.GetValue<string>("defaultLanguage") ?? "en-us"; ;
+            //this.telemetryClient = telemetryClient;
+
+            this.conversationState = services.GetService<ConversationState>();
+            this.userState = services.GetService<UserState>();
             this.dialogState = conversationState.CreateProperty<DialogState>("DialogState");
-            this.resourceExplorer = resourceExplorer;
-            this.defaultLocale = configuration.GetValue<string>("defaultLanguage") ?? "en-us"; ;
-            this.telemetryClient = telemetryClient;
+            this.resourceExplorer = services.GetService<ResourceExplorer>();
+            this.defaultLocale = options.Value.DefaultLocale ?? "en-US";
+            this.telemetryClient = services.GetService<IBotTelemetryClient>();
 
             /*
              * TODO: Runtime should get the root dialog path through application settings rather than hard-coded location
              * BODY: Define and implement a method for getting the root dialog path through application settings.
              */
-            this.rootDialogFile = GetRootDialog(configuration["bot"]);
+            //this.rootDialogFile = GetRootDialog(configuration["bot"]);
+            this.rootDialogFile = GetRootDialog(options.Value.RootDialog);
 
             /*
              * TODO: Runtime shouldn't bind bot feature settings to hard-coded class
              * BODY: Define and implement a replacement for today's implementation of BotFeatureSettings.
              */
-            var features = new BotFeatureSettings();
-            configuration.GetSection("feature").Bind(features);
+            //var features = new BotFeatureSettings();
+            //configuration.GetSection("feature").Bind(features);
 
             /*
              * TODO: Define and implement replacement of RemoveRecipientMention feature
              * BODY: RemoveRecipientMention appears to be a Teams-related Activity extension that removes @mentions in , this should be decoupled from the core runtime and available as a middleware. 
              */
-            this.removeRecipientMention = features.RemoveRecipientMention;
+            this.removeRecipientMention = options.Value.RemoveRecipientMention;
 
             this.LoadRootDialog();
-            this.dialogManager.InitialTurnState.Set(skillClient);
-            this.dialogManager.InitialTurnState.Set(conversationIdFactory);
+            this.dialogManager.InitialTurnState.Set(services.GetService<BotFrameworkClient>());
+            this.dialogManager.InitialTurnState.Set(services.GetService<SkillConversationIdFactoryBase>());
         }
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))

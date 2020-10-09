@@ -22,6 +22,7 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Core;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Bot.Core.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,7 +57,9 @@ namespace Microsoft.Bot.Runtime.WebHost
 
             services.AddSingleton<IConfiguration>(this.Configuration);
 
-            // Load settings
+            services.AddBotCore(this.Configuration);
+
+            /*// Load settings
             var settings = new BotSettings();
             Configuration.Bind(settings);
 
@@ -116,7 +119,7 @@ namespace Microsoft.Bot.Runtime.WebHost
             services.AddSingleton(resourceExplorer);
 
             // Bot
-            services.AddSingleton<IBot, CoreBot>();
+            services.AddSingleton<IBot, CoreBot>();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

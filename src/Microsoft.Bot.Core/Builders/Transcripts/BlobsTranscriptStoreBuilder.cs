@@ -5,13 +5,15 @@ using System;
 using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Microsoft.Bot.Core.Builders.Transcripts
 {
+    // TODO: Change parent interface to ITranscriptStoreBuilder
     [JsonObject]
-    public class BlobsTranscriptStoreBuilder : ITranscriptStoreBuilder
+    public class BlobsTranscriptStoreBuilder : ITranscriptLoggerBuilder
     {
         [JsonProperty("$kind")]
         public const string Kind = "Microsoft.BlobsTranscriptStore";
@@ -22,15 +24,15 @@ namespace Microsoft.Bot.Core.Builders.Transcripts
         [JsonProperty("containerName")]
         public StringExpression ContainerName { get; set; }
 
-        public ITranscriptStore Build(IServiceProvider services, IConfiguration configuration)
+        public ITranscriptLogger Build(IServiceProvider services, IConfiguration configuration)
         {
             if (services == null) { throw new ArgumentNullException(nameof(services)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             // TODO: Change to Microsoft.Bot.Builder.Azure.BlobsTranscriptStore
             return new AzureBlobTranscriptStore(
-                dataConnectionstring: this.ConnectionString.GetValue(configuration),
-                containerName: this.ContainerName.GetValue(configuration));
+                dataConnectionstring: this.ConnectionString.GetConfigurationValue(configuration),
+                containerName: this.ContainerName.GetConfigurationValue(configuration));
         }
     }
 }

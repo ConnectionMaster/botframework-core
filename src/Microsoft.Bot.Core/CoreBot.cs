@@ -34,24 +34,10 @@ namespace Microsoft.Bot.Core
         private readonly UserState userState;
 
         public CoreBot(
-            /*IConfiguration configuration,
-            ConversationState conversationState,
-            UserState userState,
-            ResourceExplorer resourceExplorer,
-            BotFrameworkClient skillClient,
-            SkillConversationIdFactoryBase conversationIdFactory,
-            IBotTelemetryClient telemetryClient*/
             IServiceProvider services,
             IConfiguration configuration,
             IOptions<CoreBotOptions> options)
         {
-            //this.conversationState = conversationState;
-            //this.userState = userState;
-            //this.dialogState = conversationState.CreateProperty<DialogState>("DialogState");
-            //this.resourceExplorer = resourceExplorer;
-            //this.defaultLocale = configuration.GetValue<string>("defaultLanguage") ?? "en-us"; ;
-            //this.telemetryClient = telemetryClient;
-
             this.conversationState = services.GetService<ConversationState>();
             this.userState = services.GetService<UserState>();
             this.dialogState = conversationState.CreateProperty<DialogState>("DialogState");
@@ -63,15 +49,12 @@ namespace Microsoft.Bot.Core
              * TODO: Runtime should get the root dialog path through application settings rather than hard-coded location
              * BODY: Define and implement a method for getting the root dialog path through application settings.
              */
-            //this.rootDialogFile = GetRootDialog(configuration["bot"]);
             this.rootDialogFile = GetRootDialog(options.Value.RootDialog);
 
             /*
              * TODO: Runtime shouldn't bind bot feature settings to hard-coded class
              * BODY: Define and implement a replacement for today's implementation of BotFeatureSettings.
              */
-            //var features = new BotFeatureSettings();
-            //configuration.GetSection("feature").Bind(features);
 
             /*
              * TODO: Define and implement replacement of RemoveRecipientMention feature

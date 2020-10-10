@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Bot.Core.Providers.Adapter;
 using Microsoft.Bot.Core.Providers.Storage;
 using Microsoft.Bot.Core.Providers.Telemetry;
@@ -38,7 +40,7 @@ namespace Microsoft.Bot.Core.Providers
         public bool RemoveRecipientMention { get; set; }
 
         [JsonProperty("rootDialog")]
-        public string RootDialog { get; set; }
+        public StringExpression RootDialog { get; set; }
 
         [JsonProperty("storage")]
         public IStorageProvider Storage { get; set; }
@@ -61,14 +63,12 @@ namespace Microsoft.Bot.Core.Providers
 
         void ConfigureCoreBotServices(IServiceCollection services, IConfiguration configuration)
         {
-            var options = new CoreBotOptions
+            services.Configure<CoreBotOptions>(o =>
             {
-                DefaultLocale = this.DefaultLocale,
-                RemoveRecipientMention = this.RemoveRecipientMention,
-                RootDialog = this.RootDialog
-            };
-
-            services.ConfigureOptions(options);
+                o.DefaultLocale = this.DefaultLocale;
+                o.RemoveRecipientMention = this.RemoveRecipientMention;
+                o.RootDialog = this.RootDialog.GetConfigurationValue(configuration);
+            });
 
             services.AddSingleton<IBot, CoreBot>();
         }
@@ -89,7 +89,7 @@ namespace Microsoft.Bot.Core.Providers
 
             foreach (IProvider provider in providers)
             {
-                provider.ConfigureServices(services, configuration);
+                provider?.ConfigureServices(services, configuration);
             }
 
             ConfigureSkillServices(services, configuration);

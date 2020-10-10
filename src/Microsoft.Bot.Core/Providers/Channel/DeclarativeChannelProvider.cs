@@ -4,6 +4,7 @@
 using System;
 using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Connector.Authentication;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -25,7 +26,8 @@ namespace Microsoft.Bot.Core.Providers.Channel
             if (services == null) { throw new ArgumentNullException(nameof(services)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
-            services.AddSingleton<IChannel>(_ => new SimpleChannelProvider(this.ChannelService.GetValue(configuration)));
+            services.AddSingleton<IChannel>(_ => new SimpleChannelProvider(
+                this.ChannelService.GetConfigurationValue(configuration)));
         }
     }
 }

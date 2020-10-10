@@ -5,6 +5,7 @@ using System;
 using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -45,13 +46,13 @@ namespace Microsoft.Bot.Core.Providers.Storage
 
             var options = new CosmosDbPartitionedStorageOptions
             {
-                AuthKey = this.AuthenticationKey.GetValue(configuration),
-                CompatibilityMode = this.CompatibilityMode.GetValue(configuration),
-                ContainerId = this.ContainerId.GetValue(configuration),
-                ContainerThroughput = this.ContainerThroughput.GetValue(configuration),
-                CosmosDbEndpoint = this.Endpoint.GetValue(configuration),
-                DatabaseId = this.DatabaseId.GetValue(configuration),
-                KeySuffix = this.KeySuffix.GetValue(configuration)
+                AuthKey = this.AuthenticationKey.GetConfigurationValue(configuration),
+                CompatibilityMode = this.CompatibilityMode.GetConfigurationValue(configuration),
+                ContainerId = this.ContainerId.GetConfigurationValue(configuration),
+                ContainerThroughput = this.ContainerThroughput.GetConfigurationValue(configuration),
+                CosmosDbEndpoint = this.Endpoint.GetConfigurationValue(configuration),
+                DatabaseId = this.DatabaseId.GetConfigurationValue(configuration),
+                KeySuffix = this.KeySuffix.GetConfigurationValue(configuration)
             };
 
             services.AddSingleton<IStorage>(_ => new CosmosDbPartitionedStorage(options));

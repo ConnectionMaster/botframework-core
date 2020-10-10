@@ -4,6 +4,7 @@
 using System;
 using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Connector.Authentication;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -29,8 +30,8 @@ namespace Microsoft.Bot.Core.Providers.Credentials
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             services.AddSingleton<ICredentials>(_ => new SimpleCredentialProvider(
-                appId: this.ApplicationId.GetValue(configuration),
-                password: this.ApplicationPassword.GetValue(configuration)));
+                appId: this.ApplicationId.GetConfigurationValue(configuration),
+                password: this.ApplicationPassword.GetConfigurationValue(configuration)));
         }
     }
 }

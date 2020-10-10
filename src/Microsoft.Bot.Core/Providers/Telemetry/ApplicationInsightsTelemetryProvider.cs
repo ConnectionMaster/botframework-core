@@ -7,6 +7,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.ApplicationInsights;
 using Microsoft.Bot.Builder.Integration.ApplicationInsights.Core;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -27,7 +28,7 @@ namespace Microsoft.Bot.Core.Providers.Telemetry
             if (services == null) { throw new ArgumentNullException(nameof(services)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
-            services.AddApplicationInsightsTelemetry(this.InstrumentationKey.GetValue(configuration));
+            services.AddApplicationInsightsTelemetry(this.InstrumentationKey.GetConfigurationValue(configuration));
             services.AddSingleton<ITelemetryInitializer, OperationCorrelationTelemetryInitializer>();
             services.AddSingleton<ITelemetryInitializer, TelemetryBotIdInitializer>();
             services.AddSingleton<IBotTelemetryClient, BotTelemetryClient>();

@@ -5,6 +5,7 @@ using System;
 using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -30,8 +31,8 @@ namespace Microsoft.Bot.Core.Providers.Storage
 
             // TODO: Change to Microsoft.Bot.Builder.Azure.BlobsStorage
             services.AddSingleton<IStorage>(new AzureBlobStorage(
-                dataConnectionstring: this.ConnectionString.GetValue(configuration),
-                containerName: this.ContainerName.GetValue(configuration)));
+                dataConnectionstring: this.ConnectionString.GetConfigurationValue(configuration),
+                containerName: this.ContainerName.GetConfigurationValue(configuration)));
         }
     }
 }

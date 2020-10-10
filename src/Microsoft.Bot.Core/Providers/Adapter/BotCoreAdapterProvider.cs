@@ -27,13 +27,13 @@ namespace Microsoft.Bot.Core.Providers.Adapter
             if (services == null) { throw new ArgumentNullException(nameof(services)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
-            var options = new CoreBotAdapterOptions();
-            foreach (IMiddlewareBuilder middleware in this.Middleware)
+            services.Configure<CoreBotAdapterOptions>(o =>
             {
-                options.Middleware.Add(middleware);
-            }
-
-            services.ConfigureOptions(options);
+                foreach (IMiddlewareBuilder middleware in this.Middleware)
+                {
+                    o.Middleware.Add(middleware);
+                }
+            });
 
             services.AddSingleton<IBotFrameworkHttpAdapter, CoreBotAdapter>();
             services.AddSingleton<BotAdapter>(

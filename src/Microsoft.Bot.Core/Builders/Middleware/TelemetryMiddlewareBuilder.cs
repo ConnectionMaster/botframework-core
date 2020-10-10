@@ -6,6 +6,7 @@ using AdaptiveExpressions.Properties;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.ApplicationInsights.Core;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -37,8 +38,8 @@ namespace Microsoft.Bot.Core.Builders.Middleware
                 httpContextAccessor: httpContextAccessor,
                 telemetryLoggerMiddleware: new TelemetryLoggerMiddleware(
                     telemetryClient: botTelemetryClient,
-                    logPersonalInformation: this.LogPersonalInformation.GetValue(configuration)),
-                logActivityTelemetry: this.LogActivities.GetValue(configuration));
+                    logPersonalInformation: this.LogPersonalInformation.GetConfigurationValue(configuration)),
+                logActivityTelemetry: this.LogActivities.GetConfigurationValue(configuration));
         }
     }
 }

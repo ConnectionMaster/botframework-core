@@ -4,6 +4,7 @@
 using System;
 using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -27,8 +28,8 @@ namespace Microsoft.Bot.Core.Builders.Transcripts
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             return new FileTranscriptLogger(
-                folder: this.Folder.GetValue(configuration),
-                unitTestMode: this.UnitTestMode.GetValue(configuration));
+                folder: this.Folder.GetConfigurationValue(configuration),
+                unitTestMode: this.UnitTestMode.GetConfigurationValue(configuration));
         }
     }
 }

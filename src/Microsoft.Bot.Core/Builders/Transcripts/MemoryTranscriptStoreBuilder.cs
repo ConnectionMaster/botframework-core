@@ -8,13 +8,14 @@ using Newtonsoft.Json;
 
 namespace Microsoft.Bot.Core.Builders.Transcripts
 {
+    // TODO: Change parent interface to ITranscriptStoreBuilder
     [JsonObject]
-    public class MemoryTranscriptStoreBuilder : ITranscriptStoreBuilder
+    public class MemoryTranscriptStoreBuilder : ITranscriptLoggerBuilder
     {
         [JsonProperty("$kind")]
         public const string Kind = "Microsoft.MemoryTranscriptStore";
 
-        public ITranscriptStore Build(IServiceProvider services, IConfiguration configuration)
+        public ITranscriptLogger Build(IServiceProvider services, IConfiguration configuration)
         {
             if (services == null) { throw new ArgumentNullException(nameof(services)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }

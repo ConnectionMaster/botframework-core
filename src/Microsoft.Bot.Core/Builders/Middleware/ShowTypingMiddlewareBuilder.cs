@@ -4,6 +4,7 @@
 using System;
 using AdaptiveExpressions.Properties;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -27,8 +28,8 @@ namespace Microsoft.Bot.Core.Builders.Middleware
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             return new ShowTypingMiddleware(
-                delay: this.Delay.GetValue(configuration),
-                period: this.Period.GetValue(configuration));
+                delay: this.Delay.GetConfigurationValue(configuration),
+                period: this.Period.GetConfigurationValue(configuration));
         }
     }
 }

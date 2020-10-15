@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Core;
 using Microsoft.Extensions.Configuration;
@@ -20,24 +21,27 @@ namespace Microsoft.Bot.Runtime.WebHost
             Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((hostingContext, builder) =>
             {
-                var env = hostingContext.HostingEnvironment;
+                IHostEnvironment env = hostingContext.HostingEnvironment;
 
                 // Use Composer bot path adapter
-                builder.UseBotPathConverter(env.IsDevelopment());
+                builder.UseBotPathConverter(
+                    applicationRoot: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    isDevelopment: env.IsDevelopment());
 
-                var configuration = builder.Build();
+                IConfiguration configuration = builder.Build();
 
-                // Hard code the settings path to 'ComposerDialogs' while deployment
-                var botRoot = configuration.GetValue<string>("bot") ?? "ComposerDialogs";
-                var configFile = Path.GetFullPath(Path.Combine(botRoot, @"settings/appsettings.json"));
+                string configFilePath = Path.GetFullPath(
+                    path: Path.Combine(
+                        configuration.GetValue<string>(ConfigurationConstants.BotKey),
+                        @"settings/appsettings.json"));
 
-                builder.AddJsonFile(configFile, optional: true, reloadOnChange: true);
+                builder.AddJsonFile(configFilePath, optional: true, reloadOnChange: true);
 
                 // Use Composer luis and qna settings extensions
                 builder.UseComposerSettings();
 
                 builder.AddEnvironmentVariables()
-                       .AddCommandLine(args);
+                    .AddCommandLine(args);
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {

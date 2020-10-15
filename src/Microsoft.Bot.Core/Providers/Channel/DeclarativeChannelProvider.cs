@@ -27,7 +27,7 @@ namespace Microsoft.Bot.Core.Providers.Channel
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             services.AddSingleton<IChannel>(_ => new SimpleChannelProvider(
-                this.ChannelService.GetConfigurationValue(configuration)));
+                this.ChannelService?.GetConfigurationValue(configuration)));
         }
     }
 }

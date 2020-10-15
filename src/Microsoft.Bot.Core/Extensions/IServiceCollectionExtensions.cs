@@ -25,8 +25,8 @@ namespace Microsoft.Bot.Core.Extensions
 
             AddComponentRegistrations(services, configuration);
 
-            ResourceExplorer resourceExplorer =
-                BuildResourceExplorer(botDirectory: configuration.GetSection(key: "bot").Value);
+            ResourceExplorer resourceExplorer = BuildResourceExplorer(
+                applicationRoot: configuration.GetSection(ConfigurationConstants.ApplicationRootKey).Value);
             services.AddSingleton(resourceExplorer);
 
             Resource runtimeConfigurationResource =
@@ -48,10 +48,10 @@ namespace Microsoft.Bot.Core.Extensions
             ComponentRegistration.Add(new CoreBotComponentRegistration());
         }
 
-        static ResourceExplorer BuildResourceExplorer(string botDirectory)
+        static ResourceExplorer BuildResourceExplorer(string applicationRoot)
         {
             return new ResourceExplorer()
-                .AddFolder(botDirectory)
+                .AddFolder(applicationRoot)
                 .RegisterType<OnQnAMatch>(OnQnAMatch.Kind);
         }
     }

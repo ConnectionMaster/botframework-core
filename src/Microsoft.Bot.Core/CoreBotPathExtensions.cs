@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Bot.Core
@@ -15,17 +17,30 @@ namespace Microsoft.Bot.Core
     /// </summary>
     public static class CoreBotPathExtensions
     {
-        public static IConfigurationBuilder UseBotPathConverter(this IConfigurationBuilder builder, bool isDevelopment = true)
+        private const string ComposerDialogsDirectoryName = "ComposerDialogs";
+        private const string DevelopmentApplicationRoot = "../../../";
+
+        public static IConfigurationBuilder UseBotPathConverter(
+            this IConfigurationBuilder builder,
+            string applicationRoot,
+            bool isDevelopment = true)
         {
-            var settings = new Dictionary<string, string>();
-            if (isDevelopment)
+            if (string.IsNullOrEmpty(applicationRoot)) { throw new ArgumentNullException(nameof(applicationRoot)); }
+
+            applicationRoot = isDevelopment ? DevelopmentApplicationRoot : applicationRoot;
+
+            var settings = new Dictionary<string, string>
             {
-                settings["bot"] = "../../../";
-            }
-            else
-            {
-                settings["bot"] = "ComposerDialogs";
-            }
+                {
+                    ConfigurationConstants.ApplicationRootKey,
+                    applicationRoot
+                },
+                {
+                    ConfigurationConstants.BotKey,
+                    isDevelopment ? applicationRoot : Path.Combine(applicationRoot, ComposerDialogsDirectoryName)
+                }
+            };
+
             builder.AddInMemoryCollection(settings);
             return builder;
         }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -13,23 +13,23 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive;
 using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
-using Microsoft.Bot.Schema;
 using Microsoft.Bot.Core.Settings;
+using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Bot.Core
 {
     public class CoreBot : ActivityHandler
     {
-        private readonly ConversationState conversationState;
-        private readonly string defaultLocale;
-        private DialogManager dialogManager;
-        private readonly IStatePropertyAccessor<DialogState> dialogState;
-        private readonly bool removeRecipientMention;
-        private readonly ResourceExplorer resourceExplorer;
-        private readonly string rootDialogFile;
-        private readonly IBotTelemetryClient telemetryClient;
-        private readonly UserState userState;
+        private readonly ConversationState _conversationState;
+        private readonly string _defaultLocale;
+        private DialogManager _dialogManager;
+        private readonly IStatePropertyAccessor<DialogState> _dialogState;
+        private readonly bool _removeRecipientMention;
+        private readonly ResourceExplorer _resourceExplorer;
+        private readonly string _rootDialogFile;
+        private readonly IBotTelemetryClient _telemetryClient;
+        private readonly UserState _userState;
 
         public CoreBot(
             IConfiguration configuration,
@@ -40,18 +40,18 @@ namespace Microsoft.Bot.Core
             SkillConversationIdFactoryBase conversationIdFactory,
             IBotTelemetryClient telemetryClient)
         {
-            this.conversationState = conversationState;
-            this.userState = userState;
-            this.dialogState = conversationState.CreateProperty<DialogState>("DialogState");
-            this.resourceExplorer = resourceExplorer;
-            this.defaultLocale = configuration.GetValue<string>("defaultLanguage") ?? "en-us"; ;
-            this.telemetryClient = telemetryClient;
+            this._conversationState = conversationState;
+            this._userState = userState;
+            this._dialogState = conversationState.CreateProperty<DialogState>("DialogState");
+            this._resourceExplorer = resourceExplorer;
+            this._defaultLocale = configuration.GetValue<string>("defaultLanguage") ?? "en-us";
+            this._telemetryClient = telemetryClient;
 
             /*
              * TODO: Runtime should get the root dialog path through application settings rather than hard-coded location
              * BODY: Define and implement a method for getting the root dialog path through application settings.
              */
-            this.rootDialogFile = GetRootDialog(configuration["bot"]);
+            this._rootDialogFile = GetRootDialog(configuration["bot"]);
 
             /*
              * TODO: Runtime shouldn't bind bot feature settings to hard-coded class
@@ -64,29 +64,29 @@ namespace Microsoft.Bot.Core
              * TODO: Define and implement replacement of RemoveRecipientMention feature
              * BODY: RemoveRecipientMention appears to be a Teams-related Activity extension that removes @mentions in , this should be decoupled from the core runtime and available as a middleware. 
              */
-            this.removeRecipientMention = features.RemoveRecipientMention;
+            this._removeRecipientMention = features.RemoveRecipientMention;
 
             this.LoadRootDialog();
-            this.dialogManager.InitialTurnState.Set(skillClient);
-            this.dialogManager.InitialTurnState.Set(conversationIdFactory);
+            this._dialogManager.InitialTurnState.Set(skillClient);
+            this._dialogManager.InitialTurnState.Set(conversationIdFactory);
         }
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-            AdaptiveDialog rootDialog = (AdaptiveDialog)this.dialogManager.RootDialog;
+            AdaptiveDialog rootDialog = (AdaptiveDialog)this._dialogManager.RootDialog;
             if (turnContext.TurnState.Get<IIdentity>(BotAdapter.BotIdentityKey) is ClaimsIdentity claimIdentity && SkillValidation.IsSkillClaim(claimIdentity.Claims))
             {
                 rootDialog.AutoEndDialog = true;
             }
 
-            if (this.removeRecipientMention && turnContext?.Activity?.Type == "message")
+            if (this._removeRecipientMention && turnContext?.Activity?.Type == "message")
             {
                 turnContext.Activity.RemoveRecipientMention();
             }
 
-            await this.dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken);
-            await this.conversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-            await this.userState.SaveChangesAsync(turnContext, false, cancellationToken);
+            await this._dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await this._conversationState.SaveChangesAsync(turnContext, false, cancellationToken).ConfigureAwait(false);
+            await this._userState.SaveChangesAsync(turnContext, false, cancellationToken).ConfigureAwait(false);
         }
 
         private string GetRootDialog(string folderPath)
@@ -105,16 +105,16 @@ namespace Microsoft.Bot.Core
 
         private void LoadRootDialog()
         {
-            var rootFile = this.resourceExplorer.GetResource(rootDialogFile);
-            var rootDialog = this.resourceExplorer.LoadType<AdaptiveDialog>(rootFile);
-            this.dialogManager = new DialogManager(rootDialog)
-                                .UseResourceExplorer(resourceExplorer)
+            var rootFile = this._resourceExplorer.GetResource(_rootDialogFile);
+            var rootDialog = this._resourceExplorer.LoadType<AdaptiveDialog>(rootFile);
+            this._dialogManager = new DialogManager(rootDialog)
+                                .UseResourceExplorer(_resourceExplorer)
                                 .UseLanguageGeneration()
-                                .UseLanguagePolicy(new LanguagePolicy(defaultLocale));
+                                .UseLanguagePolicy(new LanguagePolicy(_defaultLocale));
 
-            if (this.telemetryClient != null)
+            if (this._telemetryClient != null)
             {
-                this.dialogManager.UseTelemetry(this.telemetryClient);
+                this._dialogManager.UseTelemetry(this._telemetryClient);
             }
         }
     }

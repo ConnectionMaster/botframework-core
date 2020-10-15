@@ -1,6 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Bot.Builder.Azure;
 
@@ -26,21 +27,7 @@ namespace Microsoft.Bot.Core.Settings
 
         public static bool ConfigSectionValid(string val)
         {
-            return !string.IsNullOrEmpty(val) && !val.StartsWith("<");
-        }
-
-        public class BlobStorageConfiguration
-        {
-            public string ConnectionString { get; set; }
-
-            public string Container { get; set; }
-        }
-
-        public class AdditionalTelemetryConfiguration
-        {
-            public bool LogPersonalInformation { get; set; }
-
-            public bool LogActivities { get; set; }
+            return !string.IsNullOrEmpty(val) && !val.StartsWith("<", StringComparison.Ordinal);
         }
     }
 }

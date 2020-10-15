@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Rules for StyleCop.Analyzers" Description="Source analysis rules treat as errors for BotBuilder-DotNet solution." ToolsVersion="16.0">
   <Rules AnalyzerId="AsyncUsageAnalyzers" RuleNamespace="AsyncUsageAnalyzers">
     <Rule Id="AvoidAsyncSuffix" Action="Error" />
@@ -6,11 +6,18 @@
     <Rule Id="UseAsyncSuffix" Action="Error" />
     <Rule Id="UseConfigureAwait" Action="Error" />
   </Rules>
-  
-  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
-    <Rule Id="IDE0003" Action="None" />
+  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <Rule Id="CA1054" Action="None" /> <!-- UriParametersShouldNotBeStrings -->
+    <Rule Id="CA1062" Action="None" /> <!-- ValidateArgumentsOfPublicMethods -->
+    <Rule Id="CA1308" Action="None" /> <!-- Normalize strings to uppercase (most of our operations are normalized on lowercase -->
+    <Rule Id="CA1822" Action="None" /> <!-- Ignore Mark members as static -->
   </Rules>
-
+  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <Rule Id="CA1303" Action="None" /> <!-- DoNotPassLiteralsAsLocalizedParameters -->
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
+    <Rule Id="CA1309" Action="Error" /> <!-- Use ordinal StringComparison -->
+  </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" />
     <Rule Id="SA0002" Action="Error" />
@@ -120,7 +127,7 @@
     <Rule Id="SA1408" Action="Error" />
     <Rule Id="SA1410" Action="Error" />
     <Rule Id="SA1411" Action="Error" />
-    <Rule Id="SA1412" Action="None" /> <!-- StoreFilesAsUtf8BOM-->
+    <Rule Id="SA1412" Action="Error" />
     <Rule Id="SA1413" Action="None" /> <!-- UseTrailingCommasInMultiLineInitializers-->
     <Rule Id="SA1101" Action="None" /> <!-- PrefixLocalCallsWithThis -->
     <Rule Id="SA1129" Action="None" /> <!-- DoNotUseDefaultValueTypeConstructor-->
@@ -186,14 +193,6 @@
     <Rule Id="SA1648" Action="Error" />
     <Rule Id="SA1649" Action="Error" />
     <Rule Id="SA1651" Action="Error" />
+    <Rule Id="SX1309" Action="Error" /> <!-- FieldNamesShouldBeginWithUnderscores -->
   </Rules>
-
-  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
-	<Rule Id="CA1062" Action="None" /> <!-- ValidateArgumentsOfPublicMethods -->	
-  </Rules>
-
-  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
-	<Rule Id="CA1303" Action="None" /> <!-- DoNotPassLiteralsAsLocalizedParameters -->
-  </Rules>  
-
 </RuleSet>

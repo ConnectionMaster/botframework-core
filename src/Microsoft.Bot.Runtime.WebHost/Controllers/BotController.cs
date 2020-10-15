@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Threading.Tasks;
@@ -33,7 +33,7 @@ namespace Microsoft.Bot.Runtime.WebHost.Controllers
         {
             // Delegate the processing of the HTTP POST to the adapter.
             // The adapter will invoke the bot.
-            await this._adapter.ProcessAsync(Request, Response, _bot);
+            await this._adapter.ProcessAsync(Request, Response, _bot).ConfigureAwait(false);
         }
     }
 }

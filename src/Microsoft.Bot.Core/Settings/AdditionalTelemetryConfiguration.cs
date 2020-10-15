@@ -3,10 +3,10 @@
 
 namespace Microsoft.Bot.Core.Settings
 {
-    public class BlobStorageConfiguration
+    public class AdditionalTelemetryConfiguration
     {
-        public string ConnectionString { get; set; }
+        public bool LogPersonalInformation { get; set; }
 
-        public string Container { get; set; }
+        public bool LogActivities { get; set; }
     }
 }

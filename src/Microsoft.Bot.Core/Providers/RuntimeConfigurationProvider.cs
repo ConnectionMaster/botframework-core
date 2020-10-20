@@ -36,9 +36,6 @@ namespace Microsoft.Bot.Core.Providers
         [JsonProperty("defaultLocale")]
         public string DefaultLocale { get; set; }
 
-        [JsonProperty("removeRecipientMention")]
-        public bool RemoveRecipientMention { get; set; }
-
         [JsonProperty("rootDialog")]
         public StringExpression RootDialog { get; set; }
 

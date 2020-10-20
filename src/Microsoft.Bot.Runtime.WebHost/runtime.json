@@ -15,6 +15,9 @@
           "$kind": "Microsoft.ShowTypingMiddleware",
           "delay": 500,
           "period": 2000
+        },
+        {
+          "$kind": "Microsoft.RemoveRecipientMentionMiddleware"
         }
       ]
     }
@@ -29,7 +32,6 @@
     "applicationPassword": "=MicrosoftAppPassword"
   },
   "defaultLocale": "en-US",
-  "removeRecipientMention": true,
   "rootDialog": "=bot",
   "storage": {
     "$kind": "Microsoft.CosmosDbPartitionedStorage",

@@ -100,7 +100,6 @@ namespace Microsoft.Bot.Core.Providers
             services.Configure<CoreBotOptions>(o =>
             {
                 o.DefaultLocale = this.DefaultLocale;
-                o.RemoveRecipientMention = this.RemoveRecipientMention;
                 o.RootDialog = this.RootDialog?.GetConfigurationValue(configuration);
             });
 

@@ -12,10 +12,10 @@ using Newtonsoft.Json;
 namespace Microsoft.Bot.Core.Builders.Middleware
 {
     [JsonObject]
-    public class RemoveRecipientMiddlewareBuilder : IMiddleware, IMiddlewareBuilder
+    public class RemoveRecipientMentionMiddlewareBuilder : IMiddleware, IMiddlewareBuilder
     {
         [JsonProperty("$kind")]
-        public const string Kind = "Microsoft.RemoveRecipientMiddleware";
+        public const string Kind = "Microsoft.RemoveRecipientMentionMiddleware";
 
         public IMiddleware Build(IServiceProvider services, IConfiguration configuration)
         {

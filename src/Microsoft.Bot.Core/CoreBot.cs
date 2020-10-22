@@ -27,7 +27,6 @@ namespace Microsoft.Bot.Core
         private readonly string defaultLocale;
         private DialogManager dialogManager;
         private readonly IStatePropertyAccessor<DialogState> dialogState;
-        private readonly bool removeRecipientMention;
         private readonly ResourceExplorer resourceExplorer;
         private readonly string rootDialogFile;
         private readonly IBotTelemetryClient telemetryClient;
@@ -51,17 +50,6 @@ namespace Microsoft.Bot.Core
              */
             this.rootDialogFile = GetRootDialog(options.Value.RootDialog);
 
-            /*
-             * TODO: Runtime shouldn't bind bot feature settings to hard-coded class
-             * BODY: Define and implement a replacement for today's implementation of BotFeatureSettings.
-             */
-
-            /*
-             * TODO: Define and implement replacement of RemoveRecipientMention feature
-             * BODY: RemoveRecipientMention appears to be a Teams-related Activity extension that removes @mentions in , this should be decoupled from the core runtime and available as a middleware. 
-             */
-            this.removeRecipientMention = options.Value.RemoveRecipientMention;
-
             this.LoadRootDialog();
             this.dialogManager.InitialTurnState.Set(services.GetService<BotFrameworkClient>());
             this.dialogManager.InitialTurnState.Set(services.GetService<SkillConversationIdFactoryBase>());
@@ -73,11 +61,6 @@ namespace Microsoft.Bot.Core
             if (turnContext.TurnState.Get<IIdentity>(BotAdapter.BotIdentityKey) is ClaimsIdentity claimIdentity && SkillValidation.IsSkillClaim(claimIdentity.Claims))
             {
                 rootDialog.AutoEndDialog = true;
-            }
-
-            if (this.removeRecipientMention && turnContext?.Activity?.Type == "message")
-            {
-                turnContext.Activity.RemoveRecipientMention();
             }
 
             await this.dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken);

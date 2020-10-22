@@ -50,14 +50,9 @@ namespace Microsoft.Bot.Core
                 rootDialog.AutoEndDialog = true;
             }
 
-            if (this._removeRecipientMention && turnContext?.Activity?.Type == ActivityTypes.Message)
-            {
-                turnContext.Activity.RemoveRecipientMention();
-            }
-
-            await this._dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken).ConfigureAwait(false);
-            await this._conversationState.SaveChangesAsync(turnContext, false, cancellationToken).ConfigureAwait(false);
-            await this._userState.SaveChangesAsync(turnContext, false, cancellationToken).ConfigureAwait(false);
+            await this.dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken);
+            await this.conversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+            await this.userState.SaveChangesAsync(turnContext, false, cancellationToken);
         }
 
         private static DialogManager CreateDialogManager(IServiceProvider services, IOptions<CoreBotOptions> options)

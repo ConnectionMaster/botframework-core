@@ -24,7 +24,7 @@ namespace Microsoft.Bot.Core.Builders.Middleware
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             return new TranscriptLoggerMiddleware(
-                transcriptLogger: this.TranscriptStore.Build(services, configuration));
+                transcriptLogger: this.TranscriptStore?.Build(services, configuration));
         }
     }
 }

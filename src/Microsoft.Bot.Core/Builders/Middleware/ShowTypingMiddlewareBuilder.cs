@@ -16,6 +16,9 @@ namespace Microsoft.Bot.Core.Builders.Middleware
         [JsonProperty("$kind")]
         public const string Kind = "Microsoft.ShowTypingMiddleware";
 
+        private const int DefaultDelay = 500;
+        private const int DefaultPeriod = 2000;
+
         [JsonProperty("delay")]
         public IntExpression Delay { get; set; }
 
@@ -28,8 +31,8 @@ namespace Microsoft.Bot.Core.Builders.Middleware
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             return new ShowTypingMiddleware(
-                delay: this.Delay.GetConfigurationValue(configuration),
-                period: this.Period.GetConfigurationValue(configuration));
+                delay: this.Delay?.GetConfigurationValue(configuration) ?? DefaultDelay,
+                period: this.Period?.GetConfigurationValue(configuration) ?? DefaultPeriod);
         }
     }
 }

@@ -28,8 +28,8 @@ namespace Microsoft.Bot.Core.Builders.Transcripts
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             return new FileTranscriptLogger(
-                folder: this.Folder.GetConfigurationValue(configuration),
-                unitTestMode: this.UnitTestMode.GetConfigurationValue(configuration));
+                folder: this.Folder?.GetConfigurationValue(configuration),
+                unitTestMode: this.UnitTestMode?.GetConfigurationValue(configuration) ?? true);
         }
     }
 }

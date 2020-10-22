@@ -38,8 +38,8 @@ namespace Microsoft.Bot.Core.Builders.Middleware
                 httpContextAccessor: httpContextAccessor,
                 telemetryLoggerMiddleware: new TelemetryLoggerMiddleware(
                     telemetryClient: botTelemetryClient,
-                    logPersonalInformation: this.LogPersonalInformation.GetConfigurationValue(configuration)),
-                logActivityTelemetry: this.LogActivities.GetConfigurationValue(configuration));
+                    logPersonalInformation: this.LogPersonalInformation?.GetConfigurationValue(configuration) ?? false),
+                logActivityTelemetry: this.LogActivities?.GetConfigurationValue(configuration) ?? true);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Microsoft.Bot.Core.Builders.Transcripts
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             return new TraceTranscriptLogger(
-                traceActivity: this.TraceActivity.GetConfigurationValue(configuration));
+                traceActivity: this.TraceActivity?.GetConfigurationValue(configuration) ?? true);
         }
     }
 }

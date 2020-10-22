@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Adapters;
-using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Core.Builders.Middleware;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json.Linq;
@@ -15,7 +12,7 @@ using Xunit;
 
 namespace Microsoft.Bot.Core.Tests
 {
-    public class RemoveRecipientMiddlewareTests
+    public class RemoveRecipientMentionMiddlewareTests
     {
         /// <summary>
         ///  Slack uses @username and is expected in the Mention.text property.
@@ -25,7 +22,7 @@ namespace Microsoft.Bot.Core.Tests
         public async Task RemoveSlackAtMention()
         {
             var adapter = new TestAdapter(TestAdapter.CreateConversation("RemoveAtMention"))
-                .Use(new RemoveRecipientMiddlewareBuilder());
+                .Use(new RemoveRecipientMentionMiddlewareBuilder());
 
             // Mock Message Activity with mention properties
             var mentionProperties = JObject.Parse(
@@ -65,7 +62,7 @@ namespace Microsoft.Bot.Core.Tests
         public async Task RemoveTeamsAtMention()
         {
             var adapter = new TestAdapter(TestAdapter.CreateConversation("RemoveAtMention"))
-                .Use(new RemoveRecipientMiddlewareBuilder());
+                .Use(new RemoveRecipientMentionMiddlewareBuilder());
 
             // Mock Message Activity with mention properties
             var mentionProperties = JObject.Parse(

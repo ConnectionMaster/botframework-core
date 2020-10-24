@@ -30,8 +30,8 @@ namespace Microsoft.Bot.Core.Providers.Credentials
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             services.AddSingleton<ICredentials>(_ => new SimpleCredentialProvider(
-                appId: this.ApplicationId.GetConfigurationValue(configuration),
-                password: this.ApplicationPassword.GetConfigurationValue(configuration)));
+                appId: this.ApplicationId?.GetConfigurationValue(configuration),
+                password: this.ApplicationPassword?.GetConfigurationValue(configuration)));
         }
     }
 }

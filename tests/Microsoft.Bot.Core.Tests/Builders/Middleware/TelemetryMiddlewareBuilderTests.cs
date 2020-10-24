@@ -59,7 +59,7 @@ namespace Microsoft.Bot.Core.Tests.Builders.Middleware
         {
             IServiceProvider services = new ServiceCollection()
                 .AddTransient<IBotTelemetryClient>(_ => botTelemetryClient)
-                .AddTransient<IHttpContextAccessor>(_ => new HttpContextAccessor())
+                .AddTransient<IHttpContextAccessor, HttpContextAccessor>()
                 .BuildServiceProvider();
 
             IMiddleware middleware = new TelemetryMiddlewareBuilder

@@ -24,6 +24,8 @@ namespace Microsoft.Bot.Core.Providers
     [JsonObject]
     public class RuntimeConfigurationProvider : IProvider
     {
+        private delegate void ConfigureServicesFunc(IServiceCollection services, IConfiguration configuration);
+
         [JsonProperty("adapters")]
         public IList<IAdapterProvider> Adapters { get; } = new List<IAdapterProvider>();
 

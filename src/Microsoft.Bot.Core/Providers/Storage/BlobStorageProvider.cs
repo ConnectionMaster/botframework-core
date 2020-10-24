@@ -31,8 +31,8 @@ namespace Microsoft.Bot.Core.Providers.Storage
 
             // TODO: Change to Microsoft.Bot.Builder.Azure.BlobsStorage
             services.AddSingleton<IStorage>(new AzureBlobStorage(
-                dataConnectionstring: this.ConnectionString.GetConfigurationValue(configuration),
-                containerName: this.ContainerName.GetConfigurationValue(configuration)));
+                dataConnectionstring: this.ConnectionString?.GetConfigurationValue(configuration),
+                containerName: this.ContainerName?.GetConfigurationValue(configuration)));
         }
     }
 }

@@ -4,10 +4,12 @@
 using System;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Core.Builders.Middleware;
 using Microsoft.Bot.Core.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Microsoft.Bot.Core
@@ -18,7 +20,11 @@ namespace Microsoft.Bot.Core
             IServiceProvider services,
             IConfiguration configuration,
             IOptions<CoreBotAdapterOptions> options)
-            : base(configuration)
+            : base(
+                services.GetService<ICredentialProvider>(),
+                services.GetService<AuthenticationConfiguration>(),
+                services.GetService<IChannelProvider>(),
+                logger: services.GetService<ILogger<BotFrameworkHttpAdapter>>())
         {
             var conversationState = services.GetService<ConversationState>();
             var userState = services.GetService<UserState>();

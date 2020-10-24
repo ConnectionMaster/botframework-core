@@ -46,13 +46,13 @@ namespace Microsoft.Bot.Core.Providers.Storage
 
             var options = new CosmosDbPartitionedStorageOptions
             {
-                AuthKey = this.AuthenticationKey.GetConfigurationValue(configuration),
-                CompatibilityMode = this.CompatibilityMode.GetConfigurationValue(configuration),
-                ContainerId = this.ContainerId.GetConfigurationValue(configuration),
-                ContainerThroughput = this.ContainerThroughput.GetConfigurationValue(configuration),
-                CosmosDbEndpoint = this.Endpoint.GetConfigurationValue(configuration),
-                DatabaseId = this.DatabaseId.GetConfigurationValue(configuration),
-                KeySuffix = this.KeySuffix.GetConfigurationValue(configuration)
+                AuthKey = this.AuthenticationKey?.GetConfigurationValue(configuration),
+                CompatibilityMode = this.CompatibilityMode?.GetConfigurationValue(configuration) ?? true,
+                ContainerId = this.ContainerId?.GetConfigurationValue(configuration),
+                ContainerThroughput = this.ContainerThroughput?.GetConfigurationValue(configuration) ?? 400,
+                CosmosDbEndpoint = this.Endpoint?.GetConfigurationValue(configuration),
+                DatabaseId = this.DatabaseId?.GetConfigurationValue(configuration),
+                KeySuffix = this.KeySuffix?.GetConfigurationValue(configuration)
             };
 
             services.AddSingleton<IStorage>(_ => new CosmosDbPartitionedStorage(options));

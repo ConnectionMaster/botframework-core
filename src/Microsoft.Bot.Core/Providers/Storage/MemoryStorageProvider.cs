@@ -27,7 +27,7 @@ namespace Microsoft.Bot.Core.Providers.Storage
 
             var dictionary = new Dictionary<string, JObject>();
 
-            foreach (JProperty property in this.Content.Properties())
+            foreach (JProperty property in this.Content?.Properties() ?? Array.Empty<JProperty>())
             {
                 if (property.Type == JTokenType.Object)
                 {

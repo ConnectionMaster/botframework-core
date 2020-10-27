@@ -30,9 +30,6 @@ namespace Microsoft.Bot.Runtime.WebHost
 {
     public class Startup
     {
-        // Application setting to enable Direct Line App Service Extension
-        private string _directLineAppServiceExtensionName = System.Environment.GetEnvironmentVariable("APPSETTING_WEBSITE_SITE_NAME") + ".directline";
-
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
@@ -130,12 +127,14 @@ namespace Microsoft.Bot.Runtime.WebHost
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseWebSockets();
-            app.UseNamedPipes(_directLineAppServiceExtensionName);
             app.UseRouting()
                .UseEndpoints(endpoints =>
                {
                    endpoints.MapControllers();
                });
+
+            // Use named pipes to enable Direct Line App Service Extension
+            app.UseNamedPipes(System.Environment.GetEnvironmentVariable("APPSETTING_WEBSITE_SITE_NAME") + ".directline");
         }
     }
 }

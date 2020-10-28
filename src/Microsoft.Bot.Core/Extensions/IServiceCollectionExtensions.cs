@@ -14,45 +14,66 @@ namespace Microsoft.Bot.Core.Extensions
     {
         public static void AddBotCore(this IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             // Component registrations must be added before the resource explorer is instantiated to ensure
             // that all types are correctly registered. Any types that are registered after the resource explorer
             // is instantiated will not be picked up otherwise.
-            //
+
             ComponentRegistrations.Add();
 
-            ResourceExplorer resourceExplorer = BuildResourceExplorer(
-                applicationRoot: configuration.GetSection(ConfigurationConstants.ApplicationRootKey).Value);
+            string applicationRoot = configuration.GetSection(ConfigurationConstants.ApplicationRootKey).Value;
 
-            services.AddBotCore(configuration, resourceExplorer);
+            services.AddBotCore(
+                configuration,
+                resourceExplorerImplementationFactory: (serviceProvider) =>
+                    new ResourceExplorer()
+                        .AddFolder(applicationRoot)
+                        .RegisterType<OnQnAMatch>(OnQnAMatch.Kind));
         }
 
         internal static void AddBotCore(
             this IServiceCollection services,
             IConfiguration configuration,
-            ResourceExplorer resourceExplorer)
+            Func<IServiceProvider, ResourceExplorer> resourceExplorerImplementationFactory)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
-            if (resourceExplorer == null) { throw new ArgumentNullException(nameof(resourceExplorer)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
 
-            services.AddSingleton(resourceExplorer);
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
-            Resource runtimeConfigurationResource =
-                resourceExplorer.GetResource(id: "runtime.json");
-            var runtimeConfigurationProvider =
-                resourceExplorer.LoadType<RuntimeConfigurationProvider>(runtimeConfigurationResource);
+            if (resourceExplorerImplementationFactory == null)
+            {
+                throw new ArgumentNullException(nameof(resourceExplorerImplementationFactory));
+            }
 
-            runtimeConfigurationProvider.ConfigureServices(services, configuration);
-        }
+            services.AddSingleton<ResourceExplorer>(resourceExplorerImplementationFactory);
 
-        static ResourceExplorer BuildResourceExplorer(string applicationRoot)
-        {
-            return new ResourceExplorer()
-                .AddFolder(applicationRoot)
-                .RegisterType<OnQnAMatch>(OnQnAMatch.Kind);
+            using (IServiceScope serviceScope = services.BuildServiceProvider().CreateScope())
+            {
+                ResourceExplorer resourceExplorer =
+                    serviceScope.ServiceProvider.GetRequiredService<ResourceExplorer>();
+
+                Resource runtimeConfigurationResource =
+                    resourceExplorer.GetResource(id: "runtime.json");
+                var runtimeConfigurationProvider =
+                    resourceExplorer.LoadType<RuntimeConfigurationProvider>(runtimeConfigurationResource);
+
+                runtimeConfigurationProvider.ConfigureServices(services, configuration);
+            }
         }
     }
 }

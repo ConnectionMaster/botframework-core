@@ -11,8 +11,15 @@ namespace Microsoft.Bot.Core.Extensions
     {
         public static T GetConfigurationValue<T>(this ExpressionProperty<T> property, IConfiguration configuration)
         {
-            if (property == null) { throw new ArgumentNullException(nameof(property)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (property == null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             return property.GetValue(new AdaptiveConfiguration(configuration));
         }

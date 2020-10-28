@@ -10,7 +10,10 @@ namespace Microsoft.Bot.Core.Tests.Resources
     {
         protected MemoryResource(string id)
         {
-            if (string.IsNullOrEmpty(id)) {throw new ArgumentNullException(nameof(id)); }
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
 
             this.FullName = id;
             this.Id = id;

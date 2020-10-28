@@ -12,8 +12,9 @@ namespace Microsoft.Bot.Core.Extensions
      * TODO: Refactor bot path adapter
      * BODY: Runtime should consume bot path value through application setting, per environment.
      */
+
     /// <summary>
-    /// Bot path adapter, for development environment, use '../../' as the bot path, for deployment and production environment, use 'ComposerDialogs' as bot path
+    /// Bot path adapter, for development environment, use '../../' as the bot path, for deployment and production environment, use 'ComposerDialogs' as bot path.
     /// </summary>
     public static class IConfigurationBuilderExtensions
     {
@@ -26,7 +27,10 @@ namespace Microsoft.Bot.Core.Extensions
             string applicationRoot,
             bool isDevelopment = true)
         {
-            if (string.IsNullOrEmpty(applicationRoot)) { throw new ArgumentNullException(nameof(applicationRoot)); }
+            if (string.IsNullOrEmpty(applicationRoot))
+            {
+                throw new ArgumentNullException(nameof(applicationRoot));
+            }
 
             applicationRoot = isDevelopment ? DevelopmentApplicationRoot : applicationRoot;
 
@@ -108,7 +112,7 @@ namespace Microsoft.Bot.Core.Extensions
             return builder;
         }
 
-        static string GetDefaultRootDialog(string botRoot)
+        private static string GetDefaultRootDialog(string botRoot)
         {
             var directory = new DirectoryInfo(botRoot);
             foreach (FileInfo file in directory.GetFiles())

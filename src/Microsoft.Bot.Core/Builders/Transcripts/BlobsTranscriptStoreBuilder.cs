@@ -26,8 +26,15 @@ namespace Microsoft.Bot.Core.Builders.Transcripts
 
         public ITranscriptLogger Build(IServiceProvider services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             // TODO: Change to Microsoft.Bot.Builder.Azure.BlobsTranscriptStore
             return new AzureBlobTranscriptStore(

@@ -16,6 +16,7 @@ namespace Microsoft.Bot.Core.Tests.Resources
         private static readonly Encoding Encoding = new UTF8Encoding(
             encoderShouldEmitUTF8Identifier: false,
             throwOnInvalidBytes: true);
+
         private static readonly JsonSerializer JsonSerializer = JsonSerializer.CreateDefault(
             settings: new JsonSerializerSettings
             {

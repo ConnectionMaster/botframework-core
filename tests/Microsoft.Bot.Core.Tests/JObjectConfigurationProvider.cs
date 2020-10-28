@@ -36,10 +36,11 @@ namespace Microsoft.Bot.Core.Tests
             switch (token.Type)
             {
                 case JTokenType.Object:
-                    foreach (JProperty property in ((JObject) token).Properties())
+                    foreach (JProperty property in ((JObject)token).Properties())
                     {
                         this.ParseToken(property, pathStack, property.Name);
                     }
+
                     break;
 
                 case JTokenType.Property:
@@ -52,6 +53,7 @@ namespace Microsoft.Bot.Core.Tests
                     {
                         this.ParseToken(array[i], pathStack, current: i.ToString());
                     }
+
                     break;
 
                 case JTokenType.Boolean:

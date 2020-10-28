@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -12,8 +12,8 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive;
 using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
-using Microsoft.Bot.Schema;
 using Microsoft.Bot.Core.Settings;
+using Microsoft.Bot.Schema;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -23,27 +23,48 @@ namespace Microsoft.Bot.Core
     {
         private const string DefaultLocale = "en-US";
 
-        private readonly ConversationState conversationState;
-        private readonly DialogManager dialogManager;
-        private readonly bool removeRecipientMention;
-        private readonly UserState userState;
+        private readonly ConversationState _conversationState;
+        private readonly DialogManager _dialogManager;
+        private readonly bool _removeRecipientMention;
+        private readonly UserState _userState;
 
         public CoreBot(IServiceProvider services, IOptions<CoreBotOptions> options)
         {
-            this.conversationState = services.GetRequiredService<ConversationState>();
-            this.userState = services.GetRequiredService<UserState>();
+            this._conversationState = services.GetRequiredService<ConversationState>();
+            this._userState = services.GetRequiredService<UserState>();
 
             /*
              * TODO: Define and implement replacement of RemoveRecipientMention feature
              * BODY: RemoveRecipientMention appears to be a Teams-related Activity extension that removes @mentions in ,
              * this should be decoupled from the core runtime and available as a middleware.
              */
-            this.removeRecipientMention = options.Value.RemoveRecipientMention;
+            this._removeRecipientMention = options.Value.RemoveRecipientMention;
 
-            this.dialogManager = CreateDialogManager(services, options);
+            this._dialogManager = CreateDialogManager(services, options);
         }
 
-        static DialogManager CreateDialogManager(IServiceProvider services, IOptions<CoreBotOptions> options)
+        public override async Task OnTurnAsync(
+            ITurnContext turnContext,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var rootDialog = (AdaptiveDialog)this._dialogManager.RootDialog;
+            if (turnContext.TurnState.Get<IIdentity>(BotAdapter.BotIdentityKey) is ClaimsIdentity claimIdentity &&
+                SkillValidation.IsSkillClaim(claimIdentity.Claims))
+            {
+                rootDialog.AutoEndDialog = true;
+            }
+
+            if (this._removeRecipientMention && turnContext?.Activity?.Type == ActivityTypes.Message)
+            {
+                turnContext.Activity.RemoveRecipientMention();
+            }
+
+            await this._dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await this._conversationState.SaveChangesAsync(turnContext, false, cancellationToken).ConfigureAwait(false);
+            await this._userState.SaveChangesAsync(turnContext, false, cancellationToken).ConfigureAwait(false);
+        }
+
+        private static DialogManager CreateDialogManager(IServiceProvider services, IOptions<CoreBotOptions> options)
         {
             var resourceExplorer = services.GetRequiredService<ResourceExplorer>();
             var telemetryClient = services.GetService<IBotTelemetryClient>();
@@ -65,27 +86,6 @@ namespace Microsoft.Bot.Core
             dialogManager.InitialTurnState.Set(services.GetRequiredService<SkillConversationIdFactoryBase>());
 
             return dialogManager;
-        }
-
-        public override async Task OnTurnAsync(
-            ITurnContext turnContext,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            AdaptiveDialog rootDialog = (AdaptiveDialog)this.dialogManager.RootDialog;
-            if (turnContext.TurnState.Get<IIdentity>(BotAdapter.BotIdentityKey) is ClaimsIdentity claimIdentity &&
-                SkillValidation.IsSkillClaim(claimIdentity.Claims))
-            {
-                rootDialog.AutoEndDialog = true;
-            }
-
-            if (this.removeRecipientMention && turnContext?.Activity?.Type == ActivityTypes.Message)
-            {
-                turnContext.Activity.RemoveRecipientMention();
-            }
-
-            await this.dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken);
-            await this.conversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-            await this.userState.SaveChangesAsync(turnContext, false, cancellationToken);
         }
     }
 }

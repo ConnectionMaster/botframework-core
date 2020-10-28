@@ -18,12 +18,21 @@ namespace Microsoft.Bot.Core.Providers.Storage
         public const string Kind = "Microsoft.MemoryStorage";
 
         [JsonProperty("content")]
+#pragma warning disable CA2227 // Collection properties should be read only
         public JObject Content { get; set; }
+#pragma warning restore CA2227 // Collection properties should be read only
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             var dictionary = new Dictionary<string, JObject>();
 

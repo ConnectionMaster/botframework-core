@@ -10,12 +10,12 @@ namespace Microsoft.Bot.Core.Tests
 {
     public class ServiceDescriptorSearchOptions
     {
-        public delegate IEnumerable<ServiceDescriptor> SearchFunction(IEnumerable<ServiceDescriptor> descriptors);
-
         public ServiceDescriptorSearchOptions(SearchFunction search)
         {
             this.Search = search ?? throw new ArgumentNullException(nameof(search));
         }
+
+        public delegate IEnumerable<ServiceDescriptor> SearchFunction(IEnumerable<ServiceDescriptor> descriptors);
 
         public SearchFunction Search { get; }
 

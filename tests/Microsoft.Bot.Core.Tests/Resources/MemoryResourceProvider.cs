@@ -41,7 +41,10 @@ namespace Microsoft.Bot.Core.Tests.Resources
 
         public void SetResource(MemoryResource resource)
         {
-            if (resource == null) { throw new ArgumentNullException(nameof(resource)); }
+            if (resource == null)
+            {
+                throw new ArgumentNullException(nameof(resource));
+            }
 
             this.resources[resource.Id] = resource;
             this.OnChanged(this.resources.Values);

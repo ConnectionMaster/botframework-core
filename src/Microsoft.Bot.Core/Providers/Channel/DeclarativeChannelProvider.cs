@@ -23,8 +23,15 @@ namespace Microsoft.Bot.Core.Providers.Channel
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             services.AddSingleton<IChannel>(_ => new SimpleChannelProvider(
                 this.ChannelService?.GetConfigurationValue(configuration)));

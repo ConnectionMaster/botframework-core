@@ -24,8 +24,15 @@ namespace Microsoft.Bot.Core.Providers.Adapter
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             services.Configure<CoreBotAdapterOptions>(o =>
             {

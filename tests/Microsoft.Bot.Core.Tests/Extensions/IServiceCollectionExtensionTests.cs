@@ -25,14 +25,15 @@ namespace Microsoft.Bot.Core.Tests.Extensions
         {
             IServiceCollection services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();
-            ResourceExplorer resourceExplorer = TestDataGenerator.BuildMemoryResourceExplorer();
+            Func<IServiceProvider, ResourceExplorer> resourceExplorerImplementationFactory =
+                (serviceProvider) => TestDataGenerator.BuildMemoryResourceExplorer();
 
             yield return new object[]
             {
                 "services",
                 (IServiceCollection)null,
                 configuration,
-                resourceExplorer
+                resourceExplorerImplementationFactory
             };
 
             yield return new object[]
@@ -40,15 +41,15 @@ namespace Microsoft.Bot.Core.Tests.Extensions
                 "configuration",
                 services,
                 (IConfiguration)null,
-                resourceExplorer
+                resourceExplorerImplementationFactory
             };
 
             yield return new object[]
             {
-                "resourceExplorer",
+                "resourceExplorerImplementationFactory",
                 services,
                 configuration,
-                (ResourceExplorer)null
+                (Func<IServiceProvider, ResourceExplorer>)null
             };
         }
 
@@ -57,19 +58,20 @@ namespace Microsoft.Bot.Core.Tests.Extensions
         {
             IServiceCollection services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();
-            ResourceExplorer resourceExplorer = TestDataGenerator.BuildMemoryResourceExplorer(new[]
-            {
-                new JsonResource(ResourceId, new RuntimeConfigurationProvider
-                {
-                    Adapters = { new BotCoreAdapterProvider() },
-                    Credentials = new DeclarativeCredentialsProvider(),
-                    RemoveRecipientMention = true,
-                    RootDialog = "root.dialog",
-                    Storage = new MemoryStorageProvider()
-                })
-            });
 
-            services.AddBotCore(configuration, resourceExplorer);
+            services.AddBotCore(
+                configuration,
+                (serviceProvider) => TestDataGenerator.BuildMemoryResourceExplorer(new[]
+                {
+                    new JsonResource(ResourceId, new RuntimeConfigurationProvider
+                    {
+                        Adapters = { new BotCoreAdapterProvider() },
+                        Credentials = new DeclarativeCredentialsProvider(),
+                        RemoveRecipientMention = true,
+                        RootDialog = "root.dialog",
+                        Storage = new MemoryStorageProvider()
+                    })
+                }));
         }
 
         [Theory]
@@ -78,11 +80,11 @@ namespace Microsoft.Bot.Core.Tests.Extensions
             string paramName,
             IServiceCollection services,
             IConfiguration configuration,
-            ResourceExplorer resourceExplorer)
+            Func<IServiceProvider, ResourceExplorer> resourceExplorerImplementationFactory)
         {
             Assert.Throws<ArgumentNullException>(
                 paramName,
-                () => services.AddBotCore(configuration, resourceExplorer));
+                () => services.AddBotCore(configuration, resourceExplorerImplementationFactory));
         }
 
         [Fact]
@@ -90,10 +92,11 @@ namespace Microsoft.Bot.Core.Tests.Extensions
         {
             IServiceCollection services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();
-            ResourceExplorer resourceExplorer = TestDataGenerator.BuildMemoryResourceExplorer();
 
             ArgumentException exception = Assert.Throws<ArgumentException>(
-                () => services.AddBotCore(configuration, resourceExplorer));
+                () => services.AddBotCore(
+                    configuration,
+                    (serviceProvider) => TestDataGenerator.BuildMemoryResourceExplorer()));
 
             Assert.StartsWith(
                 expectedStartString: $"Could not find resource '{ResourceId}'",

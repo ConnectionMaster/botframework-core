@@ -26,8 +26,15 @@ namespace Microsoft.Bot.Core.Providers.Storage
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             // TODO: Change to Microsoft.Bot.Builder.Azure.BlobsStorage
             services.AddSingleton<IStorage>(new AzureBlobStorage(

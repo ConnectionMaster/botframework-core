@@ -41,8 +41,15 @@ namespace Microsoft.Bot.Core.Providers.Storage
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             var options = new CosmosDbPartitionedStorageOptions
             {

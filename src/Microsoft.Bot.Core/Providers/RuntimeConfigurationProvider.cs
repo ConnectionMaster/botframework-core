@@ -48,35 +48,17 @@ namespace Microsoft.Bot.Core.Providers
         [JsonProperty("telemetry")]
         public ITelemetryProvider Telemetry { get; set; }
 
-        static void ConfigureAuthenticationConfigurationServices(
-            IServiceCollection services,
-            IConfiguration configuration)
-        {
-            services.AddSingleton<AuthenticationConfiguration>();
-        }
-
-        static void ConfigureBotStateServices(IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddSingleton<UserState>();
-            services.AddSingleton<ConversationState>();
-        }
-
-        void ConfigureCoreBotServices(IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<CoreBotOptions>(o =>
-            {
-                o.DefaultLocale = this.DefaultLocale;
-                o.RemoveRecipientMention = this.RemoveRecipientMention;
-                o.RootDialog = this.RootDialog?.GetConfigurationValue(configuration);
-            });
-
-            services.AddSingleton<IBot, CoreBot>();
-        }
-
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             var providers = new List<IProvider>(this.Adapters);
             providers.AddRange(new IProvider[]
@@ -92,17 +74,40 @@ namespace Microsoft.Bot.Core.Providers
                 provider?.ConfigureServices(services, configuration);
             }
 
-            ConfigureSkillServices(services, configuration);
-            ConfigureBotStateServices(services, configuration);
-            ConfigureAuthenticationConfigurationServices(services, configuration);
+            ConfigureSkillServices(services);
+            ConfigureBotStateServices(services);
+            ConfigureAuthenticationConfigurationServices(services);
             ConfigureCoreBotServices(services, configuration);
         }
 
-        static void ConfigureSkillServices(IServiceCollection services, IConfiguration configuration)
+        private static void ConfigureAuthenticationConfigurationServices(IServiceCollection services)
+        {
+            services.AddSingleton<AuthenticationConfiguration>();
+        }
+
+        private static void ConfigureBotStateServices(IServiceCollection services)
+        {
+            services.AddSingleton<UserState>();
+            services.AddSingleton<ConversationState>();
+        }
+
+        private static void ConfigureSkillServices(IServiceCollection services)
         {
             services.AddSingleton<SkillConversationIdFactoryBase, SkillConversationIdFactory>();
             services.AddHttpClient<BotFrameworkClient, SkillHttpClient>();
             services.AddSingleton<ChannelServiceHandler, SkillHandler>();
+        }
+
+        private void ConfigureCoreBotServices(IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<CoreBotOptions>(o =>
+            {
+                o.DefaultLocale = this.DefaultLocale;
+                o.RemoveRecipientMention = this.RemoveRecipientMention;
+                o.RootDialog = this.RootDialog?.GetConfigurationValue(configuration);
+            });
+
+            services.AddSingleton<IBot, CoreBot>();
         }
     }
 }

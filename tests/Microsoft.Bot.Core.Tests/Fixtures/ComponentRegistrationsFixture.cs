@@ -2,7 +2,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 
 using System;
-using Xunit;
 
 namespace Microsoft.Bot.Core.Tests.Fixtures
 {
@@ -16,10 +15,5 @@ namespace Microsoft.Bot.Core.Tests.Fixtures
         public void Dispose()
         {
         }
-    }
-
-    [CollectionDefinition("ComponentRegistrations")]
-    public class ComponentRegistrationsCollection : ICollectionFixture<ComponentRegistrationsFixture>
-    {
     }
 }

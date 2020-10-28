@@ -20,16 +20,6 @@ namespace Microsoft.Bot.Core.Tests
 
         private static readonly Random Random = new Random();
 
-        static string BuildPath(char leftSeparator, char rightSeparator)
-        {
-            return string.Concat(
-                PathOne,
-                new string(leftSeparator, leftSeparator == Separator ? 1 : Random.Next(Min, Max)),
-                PathTwo,
-                new string(rightSeparator, rightSeparator == Separator ? 1 : Random.Next(Min, Max)),
-                PathThree);
-        }
-
         public static IEnumerable<object[]> GetAdaptiveConfigurationTryGetValueData()
         {
             string value = Guid.NewGuid().ToString();
@@ -119,6 +109,16 @@ namespace Microsoft.Bot.Core.Tests
         {
             var configuration = new AdaptiveConfiguration(TestDataGenerator.BuildConfigurationRoot());
             Assert.Equal("1", configuration.Version());
+        }
+
+        private static string BuildPath(char leftSeparator, char rightSeparator)
+        {
+            return string.Concat(
+                PathOne,
+                new string(leftSeparator, leftSeparator == Separator ? 1 : Random.Next(Min, Max)),
+                PathTwo,
+                new string(rightSeparator, rightSeparator == Separator ? 1 : Random.Next(Min, Max)),
+                PathThree);
         }
     }
 }

@@ -72,24 +72,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
             };
         }
 
-        static AdaptiveDialog BuildDialog(string dialogId = null)
-        {
-            return new AdaptiveDialog(dialogId ?? DialogId)
-            {
-                Generator = new TemplateEngineLanguageGenerator(),
-                Recognizer = new RegexRecognizer(),
-                Triggers =
-                {
-                    new OnUnknownIntent(
-                        actions: new List<Dialog>
-                        {
-                            new SendActivity("Hello World!")
-                        })
-                }
-            };
-        }
-
-
         [Theory]
         [MemberData(nameof(GetConfigureServicesSucceedsData))]
         public void ConfigureServices_Succeeds(
@@ -306,6 +288,23 @@ namespace Microsoft.Bot.Core.Tests.Providers
 
                     Assert.Equal(expected: ResourceId, actual: exception.ParamName);
                 });
+        }
+
+        private static AdaptiveDialog BuildDialog(string dialogId = null)
+        {
+            return new AdaptiveDialog(dialogId ?? DialogId)
+            {
+                Generator = new TemplateEngineLanguageGenerator(),
+                Recognizer = new RegexRecognizer(),
+                Triggers =
+                {
+                    new OnUnknownIntent(
+                        actions: new List<Dialog>
+                        {
+                            new SendActivity("Hello World!")
+                        })
+                }
+            };
         }
     }
 }

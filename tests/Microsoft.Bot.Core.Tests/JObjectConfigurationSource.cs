@@ -18,7 +18,10 @@ namespace Microsoft.Bot.Core.Tests
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            if (builder == null) { throw new ArgumentNullException(nameof(builder)); }
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
 
             return new JObjectConfigurationProvider(this.jObject);
         }

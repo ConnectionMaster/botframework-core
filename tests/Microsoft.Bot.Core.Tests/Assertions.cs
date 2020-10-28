@@ -17,7 +17,10 @@ namespace Microsoft.Bot.Core.Tests
             Action<TOptions> assert = null)
             where TOptions : class, new()
         {
-            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
 
             var options = provider.GetService<IOptions<TOptions>>();
 
@@ -49,8 +52,15 @@ namespace Microsoft.Bot.Core.Tests
             Action<TImplementation> assert = null,
             ServiceDescriptorSearchOptions searchOptions = null)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
 
             ServiceDescriptor descriptor = AssertServiceDescriptor<TService>(
                 services,
@@ -64,7 +74,7 @@ namespace Microsoft.Bot.Core.Tests
             Assert.IsType<TImplementation>(service);
             Assert.IsAssignableFrom(descriptor.ServiceType, service);
 
-            TImplementation result = (TImplementation)service;
+            var result = (TImplementation)service;
             assert?.Invoke(result);
 
             return result;
@@ -76,10 +86,17 @@ namespace Microsoft.Bot.Core.Tests
             ServiceLifetime lifetime,
             ServiceDescriptorSearchOptions searchOptions = null)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
 
-            searchOptions = searchOptions ?? ServiceDescriptorSearchOptions.SearchByServiceType<TService>();
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            searchOptions ??= ServiceDescriptorSearchOptions.SearchByServiceType<TService>();
 
             IList<ServiceDescriptor> descriptors = searchOptions.Search(services).ToList();
 
@@ -116,8 +133,15 @@ namespace Microsoft.Bot.Core.Tests
             ServiceDescriptorSearchOptions searchOptions = null)
             where TException : Exception
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
 
             ServiceDescriptor descriptor = AssertServiceDescriptor<TService>(
                 services,
@@ -133,7 +157,7 @@ namespace Microsoft.Bot.Core.Tests
             return exception;
         }
 
-        static object GetService(IServiceProvider provider, ServiceDescriptor descriptor)
+        private static object GetService(IServiceProvider provider, ServiceDescriptor descriptor)
         {
             if (descriptor.ImplementationInstance != null)
             {

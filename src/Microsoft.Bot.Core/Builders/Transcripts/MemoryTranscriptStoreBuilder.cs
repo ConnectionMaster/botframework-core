@@ -17,8 +17,15 @@ namespace Microsoft.Bot.Core.Builders.Transcripts
 
         public ITranscriptLogger Build(IServiceProvider services, IConfiguration configuration)
         {
-            if (services == null) { throw new ArgumentNullException(nameof(services)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             return new MemoryTranscriptStore();
         }

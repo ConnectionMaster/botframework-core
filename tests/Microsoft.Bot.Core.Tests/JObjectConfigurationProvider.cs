@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
@@ -61,12 +62,12 @@ namespace Microsoft.Bot.Core.Tests
                 case JTokenType.String:
                 case JTokenType.TimeSpan:
                 case JTokenType.Uri:
-                    this.Data[string.Join(Separator, pathStack)] = token.Value<string>();
+                    this.Data[string.Join(Separator, pathStack.Reverse())] = token.Value<string>();
                     break;
 
                 case JTokenType.Null:
                 case JTokenType.Undefined:
-                    this.Data[string.Join(Separator, pathStack)] = null;
+                    this.Data[string.Join(Separator, pathStack.Reverse())] = null;
                     break;
             }
 

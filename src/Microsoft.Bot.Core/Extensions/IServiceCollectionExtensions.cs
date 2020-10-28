@@ -2,13 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
-using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.AI.Luis;
-using Microsoft.Bot.Builder.AI.QnA;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Adaptive;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
-using Microsoft.Bot.Builder.Dialogs.Declarative;
 using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Core.Providers;
 using Microsoft.Extensions.Configuration;
@@ -23,10 +17,27 @@ namespace Microsoft.Bot.Core.Extensions
             if (services == null) { throw new ArgumentNullException(nameof(services)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
-            AddComponentRegistrations(services, configuration);
+            // Component registrations must be added before the resource explorer is instantiated to ensure
+            // that all types are correctly registered. Any types that are registered after the resource explorer
+            // is instantiated will not be picked up otherwise.
+            //
+            ComponentRegistrations.Add();
 
             ResourceExplorer resourceExplorer = BuildResourceExplorer(
                 applicationRoot: configuration.GetSection(ConfigurationConstants.ApplicationRootKey).Value);
+
+            services.AddBotCore(configuration, resourceExplorer);
+        }
+
+        internal static void AddBotCore(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            ResourceExplorer resourceExplorer)
+        {
+            if (services == null) { throw new ArgumentNullException(nameof(services)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (resourceExplorer == null) { throw new ArgumentNullException(nameof(resourceExplorer)); }
+
             services.AddSingleton(resourceExplorer);
 
             Resource runtimeConfigurationResource =
@@ -35,17 +46,6 @@ namespace Microsoft.Bot.Core.Extensions
                 resourceExplorer.LoadType<RuntimeConfigurationProvider>(runtimeConfigurationResource);
 
             runtimeConfigurationProvider.ConfigureServices(services, configuration);
-        }
-
-        static void AddComponentRegistrations(IServiceCollection services, IConfiguration configuration)
-        {
-            ComponentRegistration.Add(new DialogsComponentRegistration());
-            ComponentRegistration.Add(new DeclarativeComponentRegistration());
-            ComponentRegistration.Add(new AdaptiveComponentRegistration());
-            ComponentRegistration.Add(new LanguageGenerationComponentRegistration());
-            ComponentRegistration.Add(new QnAMakerComponentRegistration());
-            ComponentRegistration.Add(new LuisComponentRegistration());
-            ComponentRegistration.Add(new CoreBotComponentRegistration());
         }
 
         static ResourceExplorer BuildResourceExplorer(string applicationRoot)

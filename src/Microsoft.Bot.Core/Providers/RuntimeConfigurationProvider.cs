@@ -24,8 +24,6 @@ namespace Microsoft.Bot.Core.Providers
     [JsonObject]
     public class RuntimeConfigurationProvider : IProvider
     {
-        private delegate void ConfigureServicesFunc(IServiceCollection services, IConfiguration configuration);
-
         [JsonProperty("adapters")]
         public IList<IAdapterProvider> Adapters { get; } = new List<IAdapterProvider>();
 
@@ -69,7 +67,7 @@ namespace Microsoft.Bot.Core.Providers
             {
                 o.DefaultLocale = this.DefaultLocale;
                 o.RemoveRecipientMention = this.RemoveRecipientMention;
-                o.RootDialog = this.RootDialog.GetConfigurationValue(configuration);
+                o.RootDialog = this.RootDialog?.GetConfigurationValue(configuration);
             });
 
             services.AddSingleton<IBot, CoreBot>();

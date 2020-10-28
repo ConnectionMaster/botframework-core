@@ -8,5 +8,7 @@ namespace Microsoft.Bot.Core
         public const string ApplicationRootKey = "applicationRoot";
 
         public const string BotKey = "bot";
+
+        public const string DefaultRootDialogKey = "defaultRootDialog";
     }
 }

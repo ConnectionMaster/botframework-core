@@ -27,6 +27,21 @@ namespace Microsoft.Bot.Core.Tests
             return options;
         }
 
+        public static TService AssertService<TService>(
+            IServiceCollection services,
+            IServiceProvider provider,
+            ServiceLifetime lifetime,
+            Action<TService> assert = null,
+            ServiceDescriptorSearchOptions searchOptions = null)
+        {
+            return AssertService<TService, TService>(
+                services,
+                provider,
+                lifetime,
+                assert,
+                searchOptions);
+        }
+
         public static TImplementation AssertService<TService, TImplementation>(
             IServiceCollection services,
             IServiceProvider provider,
@@ -75,6 +90,22 @@ namespace Microsoft.Bot.Core.Tests
             Assert.Equal(expected: typeof(TService), actual: descriptor.ServiceType);
 
             return descriptor;
+        }
+
+        public static TException AssertServiceThrows<TService, TException>(
+            IServiceCollection services,
+            IServiceProvider provider,
+            ServiceLifetime lifetime,
+            Action<TException> assert = null,
+            ServiceDescriptorSearchOptions searchOptions = null)
+            where TException : Exception
+        {
+            return AssertServiceThrows<TService, TService, TException>(
+                services,
+                provider,
+                lifetime,
+                assert,
+                searchOptions);
         }
 
         public static TException AssertServiceThrows<TService, TImplementation, TException>(

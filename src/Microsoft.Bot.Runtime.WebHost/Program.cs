@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Core;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -24,7 +25,7 @@ namespace Microsoft.Bot.Runtime.WebHost
                 IHostEnvironment env = hostingContext.HostingEnvironment;
 
                 // Use Composer bot path adapter
-                builder.UseBotPathConverter(
+                builder.AddBotCoreConfiguration(
                     applicationRoot: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                     isDevelopment: env.IsDevelopment());
 
@@ -38,7 +39,7 @@ namespace Microsoft.Bot.Runtime.WebHost
                 builder.AddJsonFile(configFilePath, optional: true, reloadOnChange: true);
 
                 // Use Composer luis and qna settings extensions
-                builder.UseComposerSettings();
+                builder.AddComposerConfiguration();
 
                 builder.AddEnvironmentVariables()
                     .AddCommandLine(args);

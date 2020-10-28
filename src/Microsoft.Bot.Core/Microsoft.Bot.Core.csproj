@@ -13,6 +13,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Microsoft.Bot.Core.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Bot.Builder" Version="4.10.3" />
     <PackageReference Include="Microsoft.Bot.Builder.AI.Luis" Version="4.10.3" />
     <PackageReference Include="Microsoft.Bot.Builder.AI.QnA" Version="4.10.3" />

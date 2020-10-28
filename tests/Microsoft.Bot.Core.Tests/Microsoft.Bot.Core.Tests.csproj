@@ -7,7 +7,6 @@
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <Configurations>Debug;Release</Configurations>
-    <CodeAnalysisRuleSet>..\..\src\Microsoft.Bot.Core\Microsoft.Bot.Core.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

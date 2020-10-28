@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +11,7 @@ namespace Microsoft.Bot.Runtime.WebHost
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment env, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
         }
@@ -29,7 +29,9 @@ namespace Microsoft.Bot.Runtime.WebHost
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+#pragma warning disable CA1801 // Review unused parameters
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+#pragma warning restore CA1801 // Review unused parameters
         {
             app.UseDefaultFiles();
             app.UseStaticFiles();

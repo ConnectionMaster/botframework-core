@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,16 +13,16 @@ namespace Microsoft.Bot.Runtime.CustomAction
     /// </summary>
     public class MultiplyDialog : Dialog
     {
+        [JsonProperty("$kind")]
+        public const string Kind = "MultiplyDialog";
+
         [JsonConstructor]
         public MultiplyDialog([CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
-            : base()
+                : base()
         {
             // enable instances of this command as debug break point
             this.RegisterSourceLocation(sourceFilePath, sourceLineNumber);
         }
-
-        [JsonProperty("$kind")]
-        public const string Kind = "MultiplyDialog";
 
         /// <summary>
         /// Gets or sets memory path to bind to arg1 (ex: conversation.width).

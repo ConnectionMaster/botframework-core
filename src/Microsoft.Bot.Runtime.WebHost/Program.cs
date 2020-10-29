@@ -13,6 +13,8 @@ namespace Microsoft.Bot.Runtime.WebHost
 {
     public class Program
     {
+        private const string AppSettingsRelativePath = @"settings/appsettings.json";
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -31,10 +33,8 @@ namespace Microsoft.Bot.Runtime.WebHost
 
                 IConfiguration configuration = builder.Build();
 
-                string configFilePath = Path.GetFullPath(
-                    path: Path.Combine(
-                        configuration.GetValue<string>(ConfigurationConstants.BotKey),
-                        @"settings/appsettings.json"));
+                string botRootPath = configuration.GetValue<string>(ConfigurationConstants.BotKey);
+                string configFilePath = Path.GetFullPath(Path.Combine(botRootPath, AppSettingsRelativePath));
 
                 builder.AddJsonFile(configFilePath, optional: true, reloadOnChange: true);
 

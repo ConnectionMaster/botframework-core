@@ -21,7 +21,7 @@ namespace Microsoft.Bot.Core.Extensions
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            return property.GetValue(new AdaptiveConfiguration(configuration));
+            return property.GetValue(new ConfigurationMemory(configuration));
         }
     }
 }

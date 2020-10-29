@@ -70,7 +70,7 @@ namespace Microsoft.Bot.Core.Tests
         [InlineData("path", "value")]
         public void AdaptiveConfiguration_SetValue(string path, object value)
         {
-            var configuration = new AdaptiveConfiguration(TestDataGenerator.BuildConfigurationRoot());
+            var configuration = new ConfigurationMemory(TestDataGenerator.BuildConfigurationRoot());
             Assert.Throws<InvalidOperationException>(() => configuration.SetValue(path, value));
         }
 
@@ -79,7 +79,7 @@ namespace Microsoft.Bot.Core.Tests
         {
             Assert.Throws<ArgumentNullException>(
                 "configuration",
-                () => new AdaptiveConfiguration(null));
+                () => new ConfigurationMemory(null));
         }
 
         [Theory]
@@ -90,7 +90,7 @@ namespace Microsoft.Bot.Core.Tests
             bool expectedResult,
             object expectedValue)
         {
-            bool result = new AdaptiveConfiguration(configuration).TryGetValue(path, out object value);
+            bool result = new ConfigurationMemory(configuration).TryGetValue(path, out object value);
             Assert.Equal(expectedResult, result);
             Assert.Equal(expectedValue, value);
         }
@@ -98,7 +98,7 @@ namespace Microsoft.Bot.Core.Tests
         [Fact]
         public void AdaptiveConfiguration_TryGetValue_Throws_ArgumentNullException()
         {
-            var configuration = new AdaptiveConfiguration(TestDataGenerator.BuildConfigurationRoot());
+            var configuration = new ConfigurationMemory(TestDataGenerator.BuildConfigurationRoot());
             Assert.Throws<ArgumentNullException>(
                 "path",
                 () => configuration.TryGetValue(path: null, out object value));
@@ -107,7 +107,7 @@ namespace Microsoft.Bot.Core.Tests
         [Fact]
         public void AdaptiveConfiguration_Version()
         {
-            var configuration = new AdaptiveConfiguration(TestDataGenerator.BuildConfigurationRoot());
+            var configuration = new ConfigurationMemory(TestDataGenerator.BuildConfigurationRoot());
             Assert.Equal("1", configuration.Version());
         }
 

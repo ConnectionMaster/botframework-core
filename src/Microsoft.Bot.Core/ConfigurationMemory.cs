@@ -4,11 +4,17 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using AdaptiveExpressions.Memory;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Bot.Core
 {
-    public class AdaptiveConfiguration
+    /// <summary>
+    /// Provides a wrapper around <see cref="IConfiguration"/> that adheres to the <see cref="IMemory"/> interface,
+    /// enabling evaluation of adaptive expressions defined within the runtime settings against the constructed
+    /// application configuration object.
+    /// </summary>
+    public class ConfigurationMemory : IMemory
     {
         private const string SupportedSeparator = ":";
 
@@ -16,7 +22,7 @@ namespace Microsoft.Bot.Core
 
         private readonly IConfiguration _configuration;
 
-        public AdaptiveConfiguration(IConfiguration configuration)
+        public ConfigurationMemory(IConfiguration configuration)
         {
             this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }

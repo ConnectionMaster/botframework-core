@@ -16,7 +16,6 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
 using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
-using Microsoft.Bot.Core.Extensions;
 using Microsoft.Bot.Core.Providers;
 using Microsoft.Bot.Core.Providers.Adapter;
 using Microsoft.Bot.Core.Providers.Channel;
@@ -44,7 +43,10 @@ namespace Microsoft.Bot.Core.Tests.Providers
         {
             yield return new object[]
             {
-                new List<IAdapterProvider> { new BotCoreAdapterProvider() },
+                new List<IAdapterProvider>
+                {
+                    new BotCoreAdapterProvider()
+                },
                 (IChannelProvider)null,
                 new DeclarativeCredentialsProvider(),
                 (string)null,
@@ -57,7 +59,10 @@ namespace Microsoft.Bot.Core.Tests.Providers
 
             yield return new object[]
             {
-                new List<IAdapterProvider> { new BotCoreAdapterProvider() },
+                new List<IAdapterProvider>
+                {
+                    new BotCoreAdapterProvider()
+                },
                 new DeclarativeChannelProvider(),
                 new DeclarativeCredentialsProvider(),
                 "en-CA",
@@ -65,10 +70,11 @@ namespace Microsoft.Bot.Core.Tests.Providers
                 new StringExpression("=rootDialog"),
                 new MemoryStorageProvider(),
                 new ApplicationInsightsTelemetryProvider(),
-                TestDataGenerator.BuildConfigurationRoot(new JObject
-                {
-                    { "rootDialog", ResourceId }
-                })
+                TestDataGenerator.BuildConfigurationRoot(
+                    new JObject
+                    {
+                        { "rootDialog", ResourceId }
+                    })
             };
         }
 

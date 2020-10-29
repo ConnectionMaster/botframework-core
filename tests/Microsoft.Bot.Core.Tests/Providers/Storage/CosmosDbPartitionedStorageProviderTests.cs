@@ -59,16 +59,17 @@ namespace Microsoft.Bot.Core.Tests.Providers.Storage
                 new StringExpression("=databaseId"),
                 new StringExpression("=endpoint"),
                 new StringExpression("=keySuffix"),
-                (IConfiguration)TestDataGenerator.BuildConfigurationRoot(new JObject
-                {
-                    { "authenticationKey", authenticationKey },
-                    { "compatibilityMode", compatibilityMode },
-                    { "containerId", containerId },
-                    { "containerThroughput", containerThroughput },
-                    { "databaseId", databaseId },
-                    { "endpoint", endpoint },
-                    { "keySuffix", keySuffix }
-                })
+                (IConfiguration)TestDataGenerator.BuildConfigurationRoot(
+                    new JObject
+                    {
+                        { "authenticationKey", authenticationKey },
+                        { "compatibilityMode", compatibilityMode },
+                        { "containerId", containerId },
+                        { "containerThroughput", containerThroughput },
+                        { "databaseId", databaseId },
+                        { "endpoint", endpoint },
+                        { "keySuffix", keySuffix }
+                    })
             };
         }
 

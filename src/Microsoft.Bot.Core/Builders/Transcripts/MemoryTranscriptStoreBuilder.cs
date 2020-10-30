@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Microsoft.Bot.Core.Builders.Transcripts
 {
-    // TODO: Change parent interface to ITranscriptStoreBuilder
+    // TODO #39: Change parent interface to ITranscriptStoreBuilder
     [JsonObject]
     public class MemoryTranscriptStoreBuilder : ITranscriptLoggerBuilder
     {

@@ -33,11 +33,7 @@ namespace Microsoft.Bot.Core
             this._conversationState = services.GetRequiredService<ConversationState>();
             this._userState = services.GetRequiredService<UserState>();
 
-            /*
-             * TODO: Define and implement replacement of RemoveRecipientMention feature
-             * BODY: RemoveRecipientMention appears to be a Teams-related Activity extension that removes @mentions in ,
-             * this should be decoupled from the core runtime and available as a middleware.
-             */
+            // TODO #20: Define and implement replacement of RemoveRecipientMention feature
             this._removeRecipientMention = options.Value.RemoveRecipientMention;
 
             this._dialogManager = CreateDialogManager(services, options);

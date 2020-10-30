@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace Microsoft.Bot.Core.Builders.Transcripts
 {
-    // TODO: Change parent interface to ITranscriptStoreBuilder
+    // TODO #39: Change parent interface to ITranscriptStoreBuilder
     [JsonObject]
     public class BlobsTranscriptStoreBuilder : ITranscriptLoggerBuilder
     {
@@ -36,7 +36,7 @@ namespace Microsoft.Bot.Core.Builders.Transcripts
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            // TODO: Change to Microsoft.Bot.Builder.Azure.BlobsTranscriptStore
+            // TODO #40: Change to Microsoft.Bot.Builder.Azure.BlobsTranscriptStore
             return new AzureBlobTranscriptStore(
                 dataConnectionstring: this.ConnectionString.GetConfigurationValue(configuration),
                 containerName: this.ContainerName.GetConfigurationValue(configuration));

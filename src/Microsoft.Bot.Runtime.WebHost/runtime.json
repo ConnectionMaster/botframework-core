@@ -32,7 +32,7 @@
     "applicationPassword": "=MicrosoftAppPassword"
   },
   "defaultLocale": "en-US",
-  "rootDialog": "=bot",
+  "rootDialog": "=defaultRootDialog",
   "storage": {
     "$kind": "Microsoft.CosmosDbPartitionedStorage",
     "authenticationKey": "=cosmosDb.authKey",

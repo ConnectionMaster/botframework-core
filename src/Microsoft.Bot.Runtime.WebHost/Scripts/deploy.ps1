@@ -47,7 +47,7 @@ else {
 # Check for existing deployment files
 if (-not (Test-Path (Join-Path $projFolder '.deployment'))) {
 	# Add needed deployment files for az
-	az bot prepare-deploy --lang Csharp --code-dir $projFolder --proj-file-path Microsoft.BotFramework.Composer.WebApp.csproj --output json | Out-Null
+	az bot prepare-deploy --lang Csharp --code-dir $projFolder --proj-file-path Microsoft.Bot.Runtime.WebHost.csproj --output json | Out-Null
 }
 
 # Delete src zip, if it exists
@@ -66,7 +66,7 @@ Remove-Item $remoteBotPath -Recurse -ErrorAction Ignore
 
 if (-not $botPath) {
 	# If don't provide bot path, then try to copy all dialogs except the runtime folder in parent folder to the publishing folder (bin\Realse\ Folder)
-	$botPath = '../..'
+	$botPath = '../../..'
 }
 
 $botPath = $(Join-Path $botPath '*')

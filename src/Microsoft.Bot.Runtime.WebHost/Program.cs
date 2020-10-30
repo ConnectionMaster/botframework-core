@@ -2,8 +2,10 @@
 // Licensed under the MIT License.
 
 using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Core;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -11,6 +13,8 @@ namespace Microsoft.Bot.Runtime.WebHost
 {
     public class Program
     {
+        private const string AppSettingsRelativePath = @"settings/appsettings.json";
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -20,24 +24,25 @@ namespace Microsoft.Bot.Runtime.WebHost
             Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((hostingContext, builder) =>
             {
-                var env = hostingContext.HostingEnvironment;
+                IHostEnvironment env = hostingContext.HostingEnvironment;
 
                 // Use Composer bot path adapter
-                builder.UseBotPathConverter(env.IsDevelopment());
+                builder.AddBotCoreConfiguration(
+                    applicationRoot: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    isDevelopment: env.IsDevelopment());
 
-                var configuration = builder.Build();
+                IConfiguration configuration = builder.Build();
 
-                // Hard code the settings path to 'ComposerDialogs' while deployment
-                var botRoot = configuration.GetValue<string>("bot") ?? "ComposerDialogs";
-                var configFile = Path.GetFullPath(Path.Combine(botRoot, @"settings/appsettings.json"));
+                string botRootPath = configuration.GetValue<string>(ConfigurationConstants.BotKey);
+                string configFilePath = Path.GetFullPath(Path.Combine(botRootPath, AppSettingsRelativePath));
 
-                builder.AddJsonFile(configFile, optional: true, reloadOnChange: true);
+                builder.AddJsonFile(configFilePath, optional: true, reloadOnChange: true);
 
                 // Use Composer luis and qna settings extensions
-                builder.UseComposerSettings();
+                builder.AddComposerConfiguration();
 
                 builder.AddEnvironmentVariables()
-                       .AddCommandLine(args);
+                    .AddCommandLine(args);
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {

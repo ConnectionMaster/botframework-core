@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Schema;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Microsoft.Bot.Core.Tests
 {
-    [TestClass]
     public class SkillConversationIdFactoryTests
     {
         private const string ServiceUrl = "http://testbot.com/api/messages";
@@ -24,7 +23,7 @@ namespace Microsoft.Bot.Core.Tests
         private SkillConversationIdFactory SkillConversationIdFactory { get; } =
             new SkillConversationIdFactory(new MemoryStorage());
 
-        [TestMethod]
+        [Fact]
         public async Task SkillConversationIdFactoryHappyPath()
         {
             ConversationReference conversationReference = BuildConversationReference();
@@ -39,7 +38,7 @@ namespace Microsoft.Bot.Core.Tests
                 },
                 cancellationToken: CancellationToken.None);
 
-            Assert.IsFalse(
+            Assert.False(
                 string.IsNullOrEmpty(skillConversationId),
                 "Expected a valid skill conversation ID to be created");
 
@@ -58,28 +57,26 @@ namespace Microsoft.Bot.Core.Tests
                 skillConversationId,
                 CancellationToken.None);
 
-            Assert.IsNull(
-                skillConversationReference,
-                "Expected skill conversation reference to be null following deletion");
+            Assert.Null(skillConversationReference);
         }
 
         private static void AssertConversationReference(ConversationReference expected, ConversationReference actual)
         {
-            if (expected == null) 
-            { 
-                throw new ArgumentNullException(nameof(expected)); 
+            if (expected == null)
+            {
+                throw new ArgumentNullException(nameof(expected));
             }
 
-            if (actual == null) 
-            { 
-                throw new ArgumentNullException(nameof(actual)); 
+            if (actual == null)
+            {
+                throw new ArgumentNullException(nameof(actual));
             }
 
-            Assert.IsNotNull(expected.Conversation, "Expected Conversation");
-            Assert.IsNotNull(actual.Conversation, "Actual Conversation");
+            Assert.NotNull(expected.Conversation);
+            Assert.NotNull(actual.Conversation);
 
-            Assert.AreEqual(expected.Conversation.Id, actual.Conversation.Id, "Conversation.Id");
-            Assert.AreEqual(expected.ServiceUrl, actual.ServiceUrl, "ServiceUrl");
+            Assert.Equal(expected.Conversation.Id, actual.Conversation.Id);
+            Assert.Equal(expected.ServiceUrl, actual.ServiceUrl);
         }
 
         private static ConversationReference BuildConversationReference()
@@ -93,9 +90,9 @@ namespace Microsoft.Bot.Core.Tests
 
         private static Activity BuildMessageActivity(ConversationReference conversationReference)
         {
-            if (conversationReference == null) 
-            { 
-                throw new ArgumentNullException(nameof(conversationReference)); 
+            if (conversationReference == null)
+            {
+                throw new ArgumentNullException(nameof(conversationReference));
             }
 
             var activity = (Activity)Activity.CreateMessageActivity();

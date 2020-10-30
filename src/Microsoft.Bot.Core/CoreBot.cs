@@ -25,16 +25,12 @@ namespace Microsoft.Bot.Core
 
         private readonly ConversationState _conversationState;
         private readonly DialogManager _dialogManager;
-        private readonly bool _removeRecipientMention;
         private readonly UserState _userState;
 
         public CoreBot(IServiceProvider services, IOptions<CoreBotOptions> options)
         {
             this._conversationState = services.GetRequiredService<ConversationState>();
             this._userState = services.GetRequiredService<UserState>();
-
-            // TODO #20: Define and implement replacement of RemoveRecipientMention feature
-            this._removeRecipientMention = options.Value.RemoveRecipientMention;
 
             this._dialogManager = CreateDialogManager(services, options);
         }
@@ -50,9 +46,9 @@ namespace Microsoft.Bot.Core
                 rootDialog.AutoEndDialog = true;
             }
 
-            await this.dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken);
-            await this.conversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-            await this.userState.SaveChangesAsync(turnContext, false, cancellationToken);
+            await this._dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await this._conversationState.SaveChangesAsync(turnContext, false, cancellationToken).ConfigureAwait(false);
+            await this._userState.SaveChangesAsync(turnContext, false, cancellationToken).ConfigureAwait(false);
         }
 
         private static DialogManager CreateDialogManager(IServiceProvider services, IOptions<CoreBotOptions> options)

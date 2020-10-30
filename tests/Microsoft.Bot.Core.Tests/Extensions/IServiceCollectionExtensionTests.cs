@@ -67,7 +67,6 @@ namespace Microsoft.Bot.Core.Tests.Extensions
                     {
                         Adapters = { new BotCoreAdapterProvider() },
                         Credentials = new DeclarativeCredentialsProvider(),
-                        RemoveRecipientMention = true,
                         RootDialog = "root.dialog",
                         Storage = new MemoryStorageProvider()
                     })

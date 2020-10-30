@@ -46,82 +46,43 @@ namespace Microsoft.Bot.Core.Tests.Builders.Middleware
         }
 
         /// <summary>
-        ///  Slack uses @username and is expected in the Mention.text property.
+        /// Different channels have their own implementation of how users are mentioned.
+        /// Slack uses @username, while Teams uses &lt;at&gt;username&lt;/at&gt;.
         /// </summary>
-        /// <returns></returns>
-        [Fact]
-        public async Task RemoveSlackAtMention()
+        /// <param name="mentionedTextValue"> Mentioned entity text value.</param>
+        /// <param name="utterance">User utterance.</param>
+        /// <param name="receivedUtterance">User utterance received by bot after middleware processing.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Theory]
+        [InlineData("@Bot", "@Bot Hi Bot", "Hi Bot")]
+        [InlineData("<at>Bot</at>", "<at>Bot</at> Hi Bot", "Hi Bot")]
+        public async Task RemoveAtMention(string mentionedTextValue, string utterance, string receivedUtterance)
         {
-            var adapter = new TestAdapter(TestAdapter.CreateConversation("RemoveSlackAtMention"))
+            var adapter = new TestAdapter(TestAdapter.CreateConversation("RemoveAtMention"))
                 .Use(new RemoveRecipientMentionMiddlewareBuilder());
-
-            // Mock Message Activity with mention properties
-            var mentionProperties = JObject.Parse(
-                @"{
-                  ""mentioned"": {
-                            ""id"": ""bot"",
-                    ""name"": ""Bot""
-                  },
-                  ""text"": ""@Bot"",
-                  ""type"": ""mention""
-                }"
-            );
 
             var mention = new Mention
             {
                 Mentioned = adapter.Conversation.Bot,
-                Text = $"@{adapter.Conversation.Bot.Name}",
-                Properties = mentionProperties
+                Text = mentionedTextValue,
+                Properties = JObject.FromObject(new
+                {
+                    mentioned = new
+                    {
+                        id = adapter.Conversation.Bot.Id,
+                        name = adapter.Conversation.Bot.Name
+                    },
+                    text = mentionedTextValue,
+                    type = "mention"
+                })
             };
 
-            var mentionActivity = MessageFactory.Text($"{mention.Text} Hi Bot");
+            var mentionActivity = MessageFactory.Text(utterance);
             mentionActivity.Entities = new List<Entity> { mention };
 
             await new TestFlow(adapter, async (context, cancellationToken) =>
             {
-                Assert.Equal("Hi Bot", context.Activity.Text);
-
-                await Task.CompletedTask;
-            })
-                .Send(mentionActivity)
-                .StartTestAsync();
-        }
-
-        /// <summary>
-        /// Teams uses &lt;at&gt;username&lt;/at&gt; and is expected in the Mention.text property.
-        /// </summary>
-        /// <returns></returns>
-        [Fact]
-        public async Task RemoveTeamsAtMention()
-        {
-            var adapter = new TestAdapter(TestAdapter.CreateConversation("RemoveTeamsAtMention"))
-                .Use(new RemoveRecipientMentionMiddlewareBuilder());
-
-            // Mock Message Activity with mention properties
-            var mentionProperties = JObject.Parse(
-                @"{
-                  ""mentioned"": {
-                            ""id"": ""bot"",
-                    ""name"": ""Bot""
-                  },
-                  ""text"": ""<at>Bot</at>"",
-                  ""type"": ""mention""
-                }"
-            );
-
-            var mention = new Mention
-            {
-                Mentioned = adapter.Conversation.Bot,
-                Text = $"<at>{adapter.Conversation.Bot.Name}</at>",
-                Properties = mentionProperties
-            };
-
-            var mentionActivity = MessageFactory.Text($"{mention.Text} Hi Bot");
-            mentionActivity.Entities = new List<Entity> { mention };
-
-            await new TestFlow(adapter, async (context, cancellationToken) =>
-            {
-                Assert.Equal("Hi Bot", context.Activity.Text);
+                Assert.Equal(receivedUtterance, context.Activity.Text);
 
                 await Task.CompletedTask;
             })

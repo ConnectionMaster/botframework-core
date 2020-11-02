@@ -25,16 +25,12 @@ namespace Microsoft.Bot.Core
 
         private readonly ConversationState _conversationState;
         private readonly DialogManager _dialogManager;
-        private readonly bool _removeRecipientMention;
         private readonly UserState _userState;
 
         public CoreBot(IServiceProvider services, IOptions<CoreBotOptions> options)
         {
             this._conversationState = services.GetRequiredService<ConversationState>();
             this._userState = services.GetRequiredService<UserState>();
-
-            // TODO #20: Define and implement replacement of RemoveRecipientMention feature
-            this._removeRecipientMention = options.Value.RemoveRecipientMention;
 
             this._dialogManager = CreateDialogManager(services, options);
         }
@@ -48,11 +44,6 @@ namespace Microsoft.Bot.Core
                 SkillValidation.IsSkillClaim(claimIdentity.Claims))
             {
                 rootDialog.AutoEndDialog = true;
-            }
-
-            if (this._removeRecipientMention && turnContext?.Activity?.Type == ActivityTypes.Message)
-            {
-                turnContext.Activity.RemoveRecipientMention();
             }
 
             await this._dialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken).ConfigureAwait(false);

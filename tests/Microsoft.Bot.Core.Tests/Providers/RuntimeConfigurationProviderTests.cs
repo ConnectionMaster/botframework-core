@@ -50,7 +50,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
                 (IChannelProvider)null,
                 new DeclarativeCredentialsProvider(),
                 (string)null,
-                false,
                 new StringExpression(ResourceId),
                 new MemoryStorageProvider(),
                 (ITelemetryProvider)null,
@@ -66,7 +65,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
                 new DeclarativeChannelProvider(),
                 new DeclarativeCredentialsProvider(),
                 "en-CA",
-                true,
                 new StringExpression("=rootDialog"),
                 new MemoryStorageProvider(),
                 new ApplicationInsightsTelemetryProvider(),
@@ -85,7 +83,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
             IChannelProvider channel,
             ICredentialProvider credential,
             string defaultLocale,
-            bool removeRecipientMention,
             StringExpression rootDialog,
             IStorageProvider storage,
             ITelemetryProvider telemetry,
@@ -105,7 +102,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
                 Channel = channel,
                 Credentials = credential,
                 DefaultLocale = defaultLocale,
-                RemoveRecipientMention = removeRecipientMention,
                 RootDialog = rootDialog,
                 Storage = storage,
                 Telemetry = telemetry
@@ -146,7 +142,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
                 {
                     Assert.Equal(expected: defaultLocale, actual: options.DefaultLocale);
                     Assert.Equal(expected: ResourceId, actual: options.RootDialog);
-                    Assert.Equal(expected: removeRecipientMention, actual: options.RemoveRecipientMention);
                 });
 
             Assertions.AssertService<IBot, CoreBot>(
@@ -186,7 +181,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
             {
                 Adapters = { new BotCoreAdapterProvider() },
                 Credentials = new DeclarativeCredentialsProvider(),
-                RemoveRecipientMention = true,
                 Storage = new MemoryStorageProvider()
             }.ConfigureServices(services, configuration);
 
@@ -218,7 +212,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
                 {
                     Assert.Null(options.DefaultLocale);
                     Assert.Null(options.RootDialog);
-                    Assert.True(options.RemoveRecipientMention);
                 });
 
             Assertions.AssertServiceThrows<IBot, CoreBot, InvalidOperationException>(
@@ -246,7 +239,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
             {
                 Adapters = { new BotCoreAdapterProvider() },
                 Credentials = new DeclarativeCredentialsProvider(),
-                RemoveRecipientMention = true,
                 RootDialog = ResourceId,
                 Storage = new MemoryStorageProvider()
             }.ConfigureServices(services, configuration);
@@ -279,7 +271,6 @@ namespace Microsoft.Bot.Core.Tests.Providers
                 {
                     Assert.Null(options.DefaultLocale);
                     Assert.Equal(expected: ResourceId, actual: options.RootDialog);
-                    Assert.True(options.RemoveRecipientMention);
                 });
 
             Assertions.AssertServiceThrows<IBot, CoreBot, ArgumentException>(

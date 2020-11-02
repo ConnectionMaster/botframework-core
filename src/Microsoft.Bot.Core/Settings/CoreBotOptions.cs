@@ -7,8 +7,6 @@ namespace Microsoft.Bot.Core.Settings
     {
         public string DefaultLocale { get; set; }
 
-        public bool RemoveRecipientMention { get; set; }
-
         public string RootDialog { get; set; }
     }
 }

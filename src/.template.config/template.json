@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft Corporation",
+  "classifications": [ "Bot", "WebApp", "ASP.NET Core" ], 
+  "name": "Microsoft Bot Runtime",
+  "identity": "Microsoft.Bot.Runtime.CSharp",         
+  "groupIdentity":"Microsoft.Bot.Runtime",
+  "shortName": "bot",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "Microsoft.Bot.Runtime.WebHost",
+  "preferNameDirectory": true,
+  "sources": [{
+	"modifiers": [{
+		"exclude": [
+		  "**/[Bb]in/**",
+		  "**/[Oo]bj/**",
+		  ".template.config/**/*",
+		  "**/*.filelist",
+		  "**/*.user",
+		  "**/*.lock.json",
+		  "**/*.md",
+		  "**/*.props"
+		]
+	}]
+  }]
+}

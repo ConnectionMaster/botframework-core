@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Core.Builders.Middleware;
+using Microsoft.Bot.Core.Builders.OnTurnError;
 using Microsoft.Bot.Core.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,9 @@ namespace Microsoft.Bot.Core.Providers.Adapter
 
         [JsonProperty("middleware")]
         public IList<IMiddlewareBuilder> Middleware { get; } = new List<IMiddlewareBuilder>();
+
+        [JsonProperty("onTurnError")]
+        public OnTurnErrorBuilder OnTurnError { get; set; }
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
@@ -40,6 +44,8 @@ namespace Microsoft.Bot.Core.Providers.Adapter
                 {
                     o.Middleware.Add(middleware);
                 }
+
+                o.OnTurnError = this.OnTurnError;
             });
 
             services.AddSingleton<IBotFrameworkHttpAdapter, CoreBotAdapter>();

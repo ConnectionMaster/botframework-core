@@ -8,6 +8,7 @@ using Microsoft.Bot.Builder.Dialogs.Declarative;
 using Microsoft.Bot.Builder.Dialogs.Declarative.Converters;
 using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Core.Builders.Middleware;
+using Microsoft.Bot.Core.Builders.OnTurnError;
 using Microsoft.Bot.Core.Builders.Transcripts;
 using Microsoft.Bot.Core.Providers.Adapter;
 using Microsoft.Bot.Core.Providers.Channel;
@@ -33,6 +34,10 @@ namespace Microsoft.Bot.Core
                 TranscriptLoggerMiddlewareBuilder.Kind);
             yield return new DeclarativeType<RemoveRecipientMentionMiddlewareBuilder>(
                 RemoveRecipientMentionMiddlewareBuilder.Kind);
+
+            // On Turn Error providers
+            yield return new DeclarativeType<OnTurnErrorBuilder>(
+                OnTurnErrorBuilder.Kind);
 
             // Transcript Logger builders
             yield return new DeclarativeType<FileTranscriptLoggerBuilder>(

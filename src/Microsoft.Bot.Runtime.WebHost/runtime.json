@@ -19,7 +19,15 @@
         {
           "$kind": "Microsoft.RemoveRecipientMentionMiddleware"
         }
-      ]
+      ],
+      "onTurnError": {
+        "$kind": "Microsoft.OnTurnError",
+        "lgFile": "Common",
+        "logError": true,
+        "logErrorMessageLgTemplate": "LogErrorMessage",
+        "responseLgTemplate": "SomethingWentWrong",
+        "sendTraceActivity": true
+      }
     }
   ],
   "channel": {

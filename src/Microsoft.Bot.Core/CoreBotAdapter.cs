@@ -2,11 +2,17 @@
 // Licensed under the MIT License.
 
 using System;
+using System.IO;
+using System.Linq.Expressions;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Builder.LanguageGeneration;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Core.Builders.Middleware;
+using Microsoft.Bot.Core.Extensions;
 using Microsoft.Bot.Core.Settings;
+using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,7 +25,8 @@ namespace Microsoft.Bot.Core
         public CoreBotAdapter(
             IServiceProvider services,
             IConfiguration configuration,
-            IOptions<CoreBotAdapterOptions> options)
+            IOptions<CoreBotAdapterOptions> options,
+            ILogger<BotFrameworkHttpAdapter> logger)
             : base(
                 services.GetService<ICredentialProvider>(),
                 services.GetService<AuthenticationConfiguration>(),
@@ -28,6 +35,8 @@ namespace Microsoft.Bot.Core
         {
             var conversationState = services.GetService<ConversationState>();
             var userState = services.GetService<UserState>();
+
+            var rexplorer = services.GetService<ResourceExplorer>();
 
             this.UseStorage(services.GetService<IStorage>());
             this.UseBotState(userState, conversationState);
@@ -38,12 +47,7 @@ namespace Microsoft.Bot.Core
                 this.Use(middleware.Build(services, configuration));
             }
 
-            this.OnTurnError = async (turnContext, exception) =>
-            {
-                await turnContext.SendActivityAsync(exception.Message).ConfigureAwait(false);
-                await conversationState.ClearStateAsync(turnContext).ConfigureAwait(false);
-                await conversationState.SaveChangesAsync(turnContext).ConfigureAwait(false);
-            };
+            this.OnTurnError = options.Value.OnTurnError.Build(services, configuration, logger);
         }
     }
 }

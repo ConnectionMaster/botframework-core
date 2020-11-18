@@ -26,45 +26,25 @@ namespace Microsoft.Bot.Core.Builders.OnTurnError
         [JsonProperty("$kind")]
         public const string Kind = "Microsoft.OnTurnErrorProvider";
 
-        private const bool DefaultLogError = false;
-
-        private const bool DefaultSendTraceActivity = false;
-
-        private const string DefaultLogErrorMessage = "Exception caught:";
-
-        private Templates _templates;
-
         /// <summary>
         /// Gets or sets the boolean flag to log errors. Defaults to false.
         /// </summary>
+        /// <value>
+        /// The LogError property gets/sets the value of the bool expression, logError.
+        /// </value>
         [JsonProperty("logError")]
-        private BoolExpression LogError { get; set; }
+        public BoolExpression LogError { get; set; }
 
         /// <summary>
         /// Gets or sets the boolean flag to send a trace activity with the stack trace to the user. Defaults to false.
         /// </summary>
+        /// <value>
+        /// The LogError property gets/sets the value of the bool expression, sendTraceActivity.
+        /// </value>
         [JsonProperty("sendTraceActivity")]
-        private BoolExpression SendTraceActivity { get; set; }
+        public BoolExpression SendTraceActivity { get; set; }
 
-        /// <summary>
-        /// Gets or sets the LG file containing related templates.
-        /// </summary>
-        [JsonProperty("lgFile")]
-        private StringExpression LGFile { get; set; }
-
-        /// <summary>
-        /// Gets or sets the LG template for the response to the user. The template can reference the Exception object's properties.
-        /// </summary>
-        [JsonProperty("responseLgTemplate")]
-        private StringExpression ResponseTemplate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the LG template for the exception logged message. The template can reference the Exception object's properties.
-        /// </summary>
-        [JsonProperty("logErrorMessageLgTemplate")]
-        private StringExpression LogErrorMessageTemplate { get; set; }
-
-        public Func<ITurnContext, Exception, Task> Build(IServiceProvider services, IConfiguration configuration, ILogger<IBotFrameworkHttpAdapter> logger)
+        public Func<ITurnContext, Exception, Task> Build(IServiceProvider services, IConfiguration configuration)
         {
             if (services == null)
             {
@@ -80,35 +60,29 @@ namespace Microsoft.Bot.Core.Builders.OnTurnError
 
             return async (turnContext, exception) =>
             {
-                // Get path of provided LG file
-                string[] paths = { "..", "..", "..", "language-generation", turnContext.Activity.Locale, $"{this.LGFile?.GetConfigurationValue(configuration)}.{turnContext.Activity.Locale}.lg" };
-
-                _templates = Templates.ParseFile(Path.Combine(paths));
-
                 // Log any leaked exception from the application.
-                if (this.LogError?.GetConfigurationValue(configuration) ?? DefaultLogError)
+                if (this.LogError?.GetConfigurationValue(configuration) ?? false)
                 {
-                    logger.LogError(exception, $"{_templates.Evaluate(this.LogErrorMessageTemplate?.GetConfigurationValue(configuration), exception)}" ?? $"{DefaultLogErrorMessage} {exception.Message}");
+                    var logger = services.GetService<ILogger<BotFrameworkHttpAdapter>>();
+
+                    logger.LogError(exception, exception.Message);
                 }
 
-                // Send a catch-all apology to the user.
-                await turnContext.SendActivityAsync(ActivityFactory.FromObject(_templates.Evaluate(this.ResponseTemplate?.GetConfigurationValue(configuration), exception))).ConfigureAwait(false);
-
                 // Send a trace activity with the exception to the user.
-                if (this.SendTraceActivity?.GetConfigurationValue(configuration) ?? DefaultSendTraceActivity)
+                if (this.SendTraceActivity?.GetConfigurationValue(configuration) ?? false)
                 {
                     await turnContext.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: exception.StackTrace)).ConfigureAwait(false);
                 }
+
+                // Send the exception message to the user. Since the default behavior does not
+                // send logs or trace activities, the bot appears hanging without any activity
+                // to the user.
+                await turnContext.SendActivityAsync(exception.Message).ConfigureAwait(false);
 
                 // Delete the conversationState for the current conversation to prevent the
                 // bot from getting stuck in a error-loop caused by being in a bad state.
                 await conversationState.DeleteAsync(turnContext).ConfigureAwait(false);
             };
-        }
-
-        public Func<ITurnContext, Exception, Task> Build(IServiceProvider services, IConfiguration configuration)
-        {
-            throw new NotImplementedException();
         }
     }
 }

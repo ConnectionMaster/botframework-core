@@ -14,6 +14,6 @@ namespace Microsoft.Bot.Core.Settings
     {
         public IList<IMiddlewareBuilder> Middleware { get; } = new List<IMiddlewareBuilder>();
 
-        public OnTurnErrorBuilder OnTurnError { get; set; }
+        public IOnTurnErrorBuilder OnTurnError { get; set; }
     }
 }

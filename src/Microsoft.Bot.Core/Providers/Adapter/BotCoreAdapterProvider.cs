@@ -24,7 +24,7 @@ namespace Microsoft.Bot.Core.Providers.Adapter
         public IList<IMiddlewareBuilder> Middleware { get; } = new List<IMiddlewareBuilder>();
 
         [JsonProperty("onTurnError")]
-        public OnTurnErrorBuilder OnTurnError { get; set; }
+        public IOnTurnErrorBuilder OnTurnError { get; set; } = new OnTurnErrorBuilder();
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {

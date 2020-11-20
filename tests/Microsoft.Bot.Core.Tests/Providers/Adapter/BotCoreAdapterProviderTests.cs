@@ -23,7 +23,7 @@ namespace Microsoft.Bot.Core.Tests.Providers.Adapter
             yield return new object[]
             {
                 (IList<IMiddlewareBuilder>)Array.Empty<IMiddlewareBuilder>(),
-                (IOnTurnErrorBuilder)null
+                (IOnTurnErrorHandlerBuilder)null
             };
 
             yield return new object[]
@@ -32,13 +32,13 @@ namespace Microsoft.Bot.Core.Tests.Providers.Adapter
                 {
                     new InspectionMiddlewareBuilder()
                 },
-                new OnTurnErrorBuilder()                
+                new OnTurnErrorHandlerBuilder()                
             };
         }
 
         [Theory]
         [MemberData(nameof(GetConfigureServicesSucceedsData))]
-        public void ConfigureServices_Succeeds(IList<IMiddlewareBuilder> middleware, IOnTurnErrorBuilder onTurnError)
+        public void ConfigureServices_Succeeds(IList<IMiddlewareBuilder> middleware, IOnTurnErrorHandlerBuilder onTurnError)
         {
             var services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();

@@ -35,9 +35,9 @@ namespace Microsoft.Bot.Core
             yield return new DeclarativeType<RemoveRecipientMentionMiddlewareBuilder>(
                 RemoveRecipientMentionMiddlewareBuilder.Kind);
 
-            // On Turn Error providers
-            yield return new DeclarativeType<OnTurnErrorBuilder>(
-                OnTurnErrorBuilder.Kind);
+            // OnTurnError handler providers
+            yield return new DeclarativeType<OnTurnErrorHandlerBuilder>(
+                OnTurnErrorHandlerBuilder.Kind);
 
             // Transcript Logger builders
             yield return new DeclarativeType<FileTranscriptLoggerBuilder>(

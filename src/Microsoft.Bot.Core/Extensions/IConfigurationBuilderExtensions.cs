@@ -16,7 +16,7 @@ namespace Microsoft.Bot.Core.Extensions
     public static class IConfigurationBuilderExtensions
     {
         private const string ComposerDialogsDirectoryName = "ComposerDialogs";
-        private const string DevelopmentApplicationRoot = "../../../";
+        private const string DevelopmentApplicationRoot = "./";
         private const string DialogFileExtension = ".dialog";
 
         public static IConfigurationBuilder AddBotCoreConfiguration(

@@ -1,6 +1,6 @@
 {
-  "adapters": [
-    {
+  "adapter":
+   {
       "$kind": "Microsoft.BotCoreAdapter",
       "middleware": [
         {
@@ -20,8 +20,7 @@
           "$kind": "Microsoft.RemoveRecipientMentionMiddleware"
         }
       ]
-    }
-  ],
+  },
   "channel": {
     "$kind": "Microsoft.DeclarativeChannelProvider",
     "channel": null

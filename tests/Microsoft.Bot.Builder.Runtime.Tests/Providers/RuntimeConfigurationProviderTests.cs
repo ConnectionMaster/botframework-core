@@ -81,7 +81,6 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers
         [Theory]
         [MemberData(nameof(GetConfigureServicesSucceedsData))]
         public void ConfigureServices_Succeeds(
-            IList<IAdapterProvider> adapters,
             IChannelProvider channel,
             ICredentialProvider credential,
             string defaultLocale,
@@ -105,6 +104,7 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers
 
             var runtimeConfigurationProvider = new RuntimeConfigurationProvider
             {
+                Adapter = new BotCoreAdapterProvider(),
                 Channel = channel,
                 Credentials = credential,
                 DefaultLocale = defaultLocale,
@@ -112,11 +112,6 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers
                 Storage = storage,
                 Telemetry = telemetry
             };
-
-            foreach (IAdapterProvider adapter in adapters)
-            {
-                runtimeConfigurationProvider.Adapters.Add(adapter);
-            }
 
             runtimeConfigurationProvider.ConfigureServices(services, configuration);
 
@@ -185,7 +180,7 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers
 
             new RuntimeConfigurationProvider
             {
-                Adapters = { new BotCoreAdapterProvider() },
+                Adapter = new BotCoreAdapterProvider(),
                 Credentials = new DeclarativeCredentialsProvider(),
                 Storage = new MemoryStorageProvider()
             }.ConfigureServices(services, configuration);
@@ -243,7 +238,7 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers
 
             new RuntimeConfigurationProvider
             {
-                Adapters = { new BotCoreAdapterProvider() },
+                Adapter = new BotCoreAdapterProvider(),
                 Credentials = new DeclarativeCredentialsProvider(),
                 RootDialog = ResourceId,
                 Storage = new MemoryStorageProvider()

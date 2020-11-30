@@ -4,17 +4,17 @@ VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2CB05891-BC8B-48E7-B83E-7FE711B686A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Runtime.WebHost", "src\Microsoft.Bot.Runtime.WebHost\Microsoft.Bot.Runtime.WebHost.csproj", "{295A3AD9-6911-4142-B175-0780BE30AB21}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EE9CD29D-6B02-44C7-963B-C5762CF647A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Runtime.CustomAction", "src\Microsoft.Bot.Runtime.CustomAction\Microsoft.Bot.Runtime.CustomAction.csproj", "{473A5787-117D-41AD-B81E-7E19B14519F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runtime", "src\Microsoft.Bot.Builder.Runtime\Microsoft.Bot.Builder.Runtime.csproj", "{7E9361A0-5F56-4B91-A856-CE468D56B77A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Core", "src\Microsoft.Bot.Core\Microsoft.Bot.Core.csproj", "{7E9361A0-5F56-4B91-A856-CE468D56B77A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runtime.Tests", "tests\Microsoft.Bot.Builder.Runtime.Tests\Microsoft.Bot.Builder.Runtime.Tests.csproj", "{EDF4D4B2-FD1C-49DB-A90B-509846C59188}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Core.Tests", "tests\Microsoft.Bot.Core.Tests\Microsoft.Bot.Core.Tests.csproj", "{EDF4D4B2-FD1C-49DB-A90B-509846C59188}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runtime.WebHost", "src\Microsoft.Bot.Builder.Runtime.WebHost\Microsoft.Bot.Builder.Runtime.WebHost.csproj", "{DE7AFA93-00B8-422F-B554-CDBD1298E056}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Runtime.Functions", "src\Microsoft.Bot.Runtime.Functions\Microsoft.Bot.Runtime.Functions.csproj", "{025B10C0-1C66-4102-8DB6-7E93C9FE4B8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runtime.CustomAction", "src\Microsoft.Bot.Builder.Runtime.CustomAction\Microsoft.Bot.Builder.Runtime.CustomAction.csproj", "{C6986FA8-B986-41BB-800B-EA6B2BDF7E43}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runtime.Functions", "src\Microsoft.Bot.Builder.Runtime.Functions\Microsoft.Bot.Builder.Runtime.Functions.csproj", "{05C113E7-F5E2-4CC1-A59D-D05C0299A5C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,14 +22,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{295A3AD9-6911-4142-B175-0780BE30AB21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{295A3AD9-6911-4142-B175-0780BE30AB21}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{295A3AD9-6911-4142-B175-0780BE30AB21}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{295A3AD9-6911-4142-B175-0780BE30AB21}.Release|Any CPU.Build.0 = Release|Any CPU
-		{473A5787-117D-41AD-B81E-7E19B14519F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{473A5787-117D-41AD-B81E-7E19B14519F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{473A5787-117D-41AD-B81E-7E19B14519F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{473A5787-117D-41AD-B81E-7E19B14519F7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E9361A0-5F56-4B91-A856-CE468D56B77A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7E9361A0-5F56-4B91-A856-CE468D56B77A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E9361A0-5F56-4B91-A856-CE468D56B77A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,20 +30,28 @@ Global
 		{EDF4D4B2-FD1C-49DB-A90B-509846C59188}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDF4D4B2-FD1C-49DB-A90B-509846C59188}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDF4D4B2-FD1C-49DB-A90B-509846C59188}.Release|Any CPU.Build.0 = Release|Any CPU
-		{025B10C0-1C66-4102-8DB6-7E93C9FE4B8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{025B10C0-1C66-4102-8DB6-7E93C9FE4B8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{025B10C0-1C66-4102-8DB6-7E93C9FE4B8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{025B10C0-1C66-4102-8DB6-7E93C9FE4B8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE7AFA93-00B8-422F-B554-CDBD1298E056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE7AFA93-00B8-422F-B554-CDBD1298E056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE7AFA93-00B8-422F-B554-CDBD1298E056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE7AFA93-00B8-422F-B554-CDBD1298E056}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6986FA8-B986-41BB-800B-EA6B2BDF7E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6986FA8-B986-41BB-800B-EA6B2BDF7E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6986FA8-B986-41BB-800B-EA6B2BDF7E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6986FA8-B986-41BB-800B-EA6B2BDF7E43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05C113E7-F5E2-4CC1-A59D-D05C0299A5C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05C113E7-F5E2-4CC1-A59D-D05C0299A5C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05C113E7-F5E2-4CC1-A59D-D05C0299A5C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05C113E7-F5E2-4CC1-A59D-D05C0299A5C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{295A3AD9-6911-4142-B175-0780BE30AB21} = {2CB05891-BC8B-48E7-B83E-7FE711B686A5}
-		{473A5787-117D-41AD-B81E-7E19B14519F7} = {2CB05891-BC8B-48E7-B83E-7FE711B686A5}
 		{7E9361A0-5F56-4B91-A856-CE468D56B77A} = {2CB05891-BC8B-48E7-B83E-7FE711B686A5}
 		{EDF4D4B2-FD1C-49DB-A90B-509846C59188} = {EE9CD29D-6B02-44C7-963B-C5762CF647A5}
-		{025B10C0-1C66-4102-8DB6-7E93C9FE4B8B} = {2CB05891-BC8B-48E7-B83E-7FE711B686A5}
+		{DE7AFA93-00B8-422F-B554-CDBD1298E056} = {2CB05891-BC8B-48E7-B83E-7FE711B686A5}
+		{C6986FA8-B986-41BB-800B-EA6B2BDF7E43} = {2CB05891-BC8B-48E7-B83E-7FE711B686A5}
+		{05C113E7-F5E2-4CC1-A59D-D05C0299A5C3} = {2CB05891-BC8B-48E7-B83E-7FE711B686A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3ABD55CC-193F-459C-83F3-6EBDDAC8B666}

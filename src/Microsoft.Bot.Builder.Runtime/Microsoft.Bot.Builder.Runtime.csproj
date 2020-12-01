@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.11.1" />
     <PackageReference Include="Microsoft.Bot.Builder.Dialogs" Version="4.11.1" />
     <PackageReference Include="Microsoft.Bot.Connector" Version="4.11.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.8" />
   </ItemGroup>
 

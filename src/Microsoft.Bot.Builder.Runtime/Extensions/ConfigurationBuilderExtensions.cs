@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Bot.Builder.Runtime.Extensions
@@ -16,6 +17,7 @@ namespace Microsoft.Bot.Builder.Runtime.Extensions
         private const string ComposerDialogsDirectoryName = "ComposerDialogs";
         private const string DevelopmentApplicationRoot = "../../../";
         private const string DialogFileExtension = ".dialog";
+        private const string AppSettingsRelativePath = @"settings/appsettings.json";
 
         /// <summary>
         /// Provides a collection of in-memory configuration values for the bot runtime to
@@ -112,6 +114,33 @@ namespace Microsoft.Bot.Builder.Runtime.Extensions
             if (qnaSettingsFile.Exists)
             {
                 builder.AddJsonFile(qnaSettingsFile.FullName, optional: false, reloadOnChange: true);
+            }
+
+            return builder;
+        }
+
+        public static IConfigurationBuilder ConfigureBotRuntime(this IConfigurationBuilder builder, bool isDevelopment = true, string[] commandLineArgs = null)
+        {
+            // Use Composer bot path adapter
+            builder.AddBotRuntimeConfiguration(
+                applicationRoot: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                isDevelopment: isDevelopment);
+
+            IConfiguration configuration = builder.Build();
+
+            string botRootPath = configuration.GetValue<string>(ConfigurationConstants.BotKey);
+            string configFilePath = Path.GetFullPath(Path.Combine(botRootPath, AppSettingsRelativePath));
+
+            builder.AddJsonFile(configFilePath, optional: true, reloadOnChange: true);
+
+            // Use Composer luis and qna settings extensions
+            builder.AddComposerConfiguration();
+
+            builder.AddEnvironmentVariables();
+
+            if (commandLineArgs != null)
+            {
+                builder.AddCommandLine(commandLineArgs);
             }
 
             return builder;

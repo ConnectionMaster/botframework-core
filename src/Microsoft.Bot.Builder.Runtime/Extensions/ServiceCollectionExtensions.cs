@@ -27,7 +27,7 @@ namespace Microsoft.Bot.Builder.Runtime.Extensions
         /// </summary>
         /// <param name="services">The application's collection of registered services.</param>
         /// <param name="configuration">The application configuration.</param>
-        public static void AddBotCore(this IServiceCollection services, IConfiguration configuration)
+        public static void AddBotRuntime(this IServiceCollection services, IConfiguration configuration)
         {
             if (services == null)
             {
@@ -47,7 +47,7 @@ namespace Microsoft.Bot.Builder.Runtime.Extensions
 
             string applicationRoot = configuration.GetSection(ConfigurationConstants.ApplicationRootKey).Value;
 
-            services.AddBotCore(
+            services.AddBotRuntime(
                 configuration,
                 resourceExplorerImplementationFactory: (serviceProvider) =>
                     new ResourceExplorer()
@@ -72,7 +72,7 @@ namespace Microsoft.Bot.Builder.Runtime.Extensions
         /// <param name="resourceExplorerImplementationFactory">
         /// Function used to build an instance of <see cref="ResourceExplorer"/> from registered services.
         /// </param>
-        internal static void AddBotCore(
+        internal static void AddBotRuntime(
             this IServiceCollection services,
             IConfiguration configuration,
             Func<IServiceProvider, ResourceExplorer> resourceExplorerImplementationFactory)

@@ -27,7 +27,7 @@ namespace Microsoft.Bot.Runtime.WebHost
                 IHostEnvironment env = hostingContext.HostingEnvironment;
 
                 // Use Composer bot path adapter
-                builder.AddBotCoreConfiguration(
+                builder.AddBotRuntimeConfiguration(
                     applicationRoot: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                     isDevelopment: env.IsDevelopment());
 

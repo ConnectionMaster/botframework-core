@@ -32,7 +32,7 @@ namespace Microsoft.Bot.Builder.Runtime.Extensions
         /// <returns>
         /// Supplied <see cref="IConfigurationBuilder"/> instance with additional in-memory configuration provider.
         /// </returns>
-        public static IConfigurationBuilder AddBotCoreConfiguration(
+        public static IConfigurationBuilder AddBotRuntimeConfiguration(
             this IConfigurationBuilder builder,
             string applicationRoot,
             bool isDevelopment = true)

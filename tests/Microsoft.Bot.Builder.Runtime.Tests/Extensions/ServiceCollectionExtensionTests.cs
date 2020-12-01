@@ -21,7 +21,7 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Extensions
     {
         private const string ResourceId = "runtime.json";
 
-        public static IEnumerable<object[]> GetAddBotCoreThrowsArgumentNullExceptionData()
+        public static IEnumerable<object[]> GetAddBotRuntimeThrowsArgumentNullExceptionData()
         {
             IServiceCollection services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();
@@ -54,12 +54,12 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Extensions
         }
 
         [Fact]
-        public void AddBotCore_Succeeds()
+        public void AddBotRuntime_Succeeds()
         {
             IServiceCollection services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();
 
-            services.AddBotCore(
+            services.AddBotRuntime(
                 configuration,
                 (serviceProvider) => TestDataGenerator.BuildMemoryResourceExplorer(new[]
                 {
@@ -74,8 +74,8 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(GetAddBotCoreThrowsArgumentNullExceptionData))]
-        public void AddBotCore_Throws_ArgumentNullException(
+        [MemberData(nameof(GetAddBotRuntimeThrowsArgumentNullExceptionData))]
+        public void AddBotRuntime_Throws_ArgumentNullException(
             string paramName,
             IServiceCollection services,
             IConfiguration configuration,
@@ -83,17 +83,17 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Extensions
         {
             Assert.Throws<ArgumentNullException>(
                 paramName,
-                () => services.AddBotCore(configuration, resourceExplorerImplementationFactory));
+                () => services.AddBotRuntime(configuration, resourceExplorerImplementationFactory));
         }
 
         [Fact]
-        public void AddBotCore_Throws_RuntimeConfigurationNotFound()
+        public void AddBotRuntime_Throws_RuntimeConfigurationNotFound()
         {
             IServiceCollection services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();
 
             ArgumentException exception = Assert.Throws<ArgumentException>(
-                () => services.AddBotCore(
+                () => services.AddBotRuntime(
                     configuration,
                     (serviceProvider) => TestDataGenerator.BuildMemoryResourceExplorer()));
 

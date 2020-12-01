@@ -25,7 +25,7 @@ namespace Microsoft.Bot.Runtime.WebHost
 
             services.AddSingleton<IConfiguration>(this.Configuration);
 
-            services.AddBotCore(this.Configuration);
+            services.AddBotRuntime(this.Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

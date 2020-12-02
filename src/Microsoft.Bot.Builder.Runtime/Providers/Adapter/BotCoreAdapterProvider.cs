@@ -61,6 +61,8 @@ namespace Microsoft.Bot.Builder.Runtime.Providers.Adapter
                 }
             });
 
+            // Foo.
+
             services.AddSingleton<IBotFrameworkHttpAdapter, CoreBotAdapter>();
             services.AddSingleton<BotAdapter>(
                 sp => (BotFrameworkHttpAdapter)sp.GetService<IBotFrameworkHttpAdapter>());

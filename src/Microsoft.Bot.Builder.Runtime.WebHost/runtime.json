@@ -3,22 +3,6 @@
     {
       "$kind": "Microsoft.BotCoreAdapter",
       "middleware": [
-        {
-          "$kind": "Microsoft.TranscriptLoggerMiddleware",
-          "transcriptStore": {
-            "$kind": "Microsoft.BlobsTranscriptStore",
-            "connectionString": "=blobStorage.connectionString",
-            "containerName": "=blobStorage.container"
-          }
-        },
-        {
-          "$kind": "Microsoft.ShowTypingMiddleware",
-          "delay": 500,
-          "period": 2000
-        },
-        {
-          "$kind": "Microsoft.RemoveRecipientMentionMiddleware"
-        }
       ]
     }
   ],
@@ -34,14 +18,7 @@
   "defaultLocale": "en-US",
   "rootDialog": "=defaultRootDialog",
   "storage": {
-    "$kind": "Microsoft.CosmosDbPartitionedStorage",
-    "authenticationKey": "=cosmosDb.authKey",
-    "compatibilityMode": true,
-    "containerId": "=cosmosDb.containerId",
-    "containerThroughput": 400,
-    "databaseId": "=cosmosDb.databaseId",
-    "endpoint": "=cosmosDb.cosmosDBEndpoint",
-    "keySuffix": null
+    "$kind": "Microsoft.MemoryStorage"
   },
   "telemetry": {
     "$kind": "Microsoft.ApplicationInsightsTelemetryProvider",

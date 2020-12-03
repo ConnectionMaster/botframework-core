@@ -9,11 +9,13 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Schema;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Microsoft.Bot.Builder.Runtime.Functions
 {
+    /// <summary>
+    /// Functions trigger for Bot Framework Skills messages.
+    /// </summary>
     public class SkillsTrigger
     {
         private readonly SkillHandler _skillHandler;
@@ -23,34 +25,32 @@ namespace Microsoft.Bot.Builder.Runtime.Functions
             this._skillHandler = skillHandler ?? throw new ArgumentNullException(nameof(skillHandler));
         }
 
-        [FunctionName("skills")]
-        public async Task<IActionResult> ReplyToActivityAsync(
+        /// <summary>
+        /// Bot Framework ReplyToActivity trigger handling.
+        /// </summary>
+        /// <param name="req">
+        /// The <see cref="HttpRequest"/>.
+        /// </param>
+        /// <param name="conversationId">
+        /// Conversation ID.
+        /// </param>
+        /// <param name="activityId">
+        /// activityId the reply is to.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IActionResult"/>.
+        /// </returns>
+        [FunctionName("ReplyToActivity")]
+        public async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v3/conversations/{conversationId}/activities/{activityId}")] HttpRequest req,
             string conversationId, 
-            string activityId, 
-            ILogger log)
+            string activityId)
         {
-            log.LogInformation($"Skill ReplyToActivityAsync endpoint triggered.");
-
             var body = await req.ReadAsStringAsync().ConfigureAwait(false);
             var activity = JsonConvert.DeserializeObject<Activity>(body, ActivitySerializationSettings.Default);
             var result = await _skillHandler.HandleReplyToActivityAsync(req.Headers["Authorization"], conversationId, activityId, activity).ConfigureAwait(false);
 
             return new JsonResult(result, ActivitySerializationSettings.Default);
         }
-
-        //[FunctionName("skills")]
-        //public async Task<IActionResult> SendToConversationAsync(
-        //    [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v3/conversations/{conversationId}/activities")] HttpRequest req,
-        //    string conversationId, string activityId, ILogger log)
-        //{
-        //    log.LogInformation($"Skill ReplyToActivityAsync endpoint triggered.");
-
-        //    var body = await req.ReadAsStringAsync();
-        //    var activity = JsonConvert.DeserializeObject<Activity>(body, ActivitySerializationSettings.Default);
-        //    var result = await _skillHandler.HandleSendToConversationAsync(req.Headers["Authorization"], conversationId, activity);
-
-        //    return new JsonResult(result, ActivitySerializationSettings.Default);
-        //}
     }
 }

@@ -2,18 +2,19 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
-using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Bot.Builder.Runtime.Functions
 {
+    /// <summary>
+    /// Functions trigger for Bot Framework messages.
+    /// </summary>
     public class MessagesTrigger
     {
         private readonly IBotFrameworkHttpAdapter _adapter;
@@ -25,31 +26,31 @@ namespace Microsoft.Bot.Builder.Runtime.Functions
             this._bot = bot ?? throw new ArgumentNullException(nameof(bot));
         }
 
+        /// <summary>
+        /// Bot Framework messages trigger handling.
+        /// </summary>
+        /// <param name="req">
+        /// The <see cref="HttpRequest"/>.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IActionResult"/>.
+        /// </returns>
         [FunctionName("messages")]
-#pragma warning disable UseAsyncSuffix // Use Async suffix
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+        public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req)
         {
-#pragma warning restore UseAsyncSuffix // Use Async suffix
-            log.LogInformation($"Messages endpoint triggered.");
-
             // Delegate the processing of the HTTP POST to the adapter.
             // The adapter will invoke the bot.
             await _adapter.ProcessAsync(req, req.HttpContext.Response, _bot).ConfigureAwait(false);
 
-            if (req.HttpContext.Response.StatusCode == (int)HttpStatusCode.OK || req.HttpContext.Response.StatusCode == (int)HttpStatusCode.Accepted)
+            if (req.HttpContext.Response.IsSuccessStatusCode())
             {
                 return new OkResult();
             }
-            else
+
+            return new ContentResult()
             {
-                return new ContentResult()
-                {
-                    StatusCode = req.HttpContext.Response.StatusCode,
-                    Content = $"Bot execution failed with status code: {req.HttpContext.Response.StatusCode}"
-                };
-            }    
+                StatusCode = req.HttpContext.Response.StatusCode,
+            };
         }
     }
 }

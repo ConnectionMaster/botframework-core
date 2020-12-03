@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runtime.CustomAction", "src\Microsoft.Bot.Builder.Runtime.CustomAction\Microsoft.Bot.Builder.Runtime.CustomAction.csproj", "{C6986FA8-B986-41BB-800B-EA6B2BDF7E43}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runtime.Functions", "src\Microsoft.Bot.Builder.Runtime.Functions\Microsoft.Bot.Builder.Runtime.Functions.csproj", "{AA55A7C3-D64A-4FDF-9B33-D57DBF79593E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Runtime.FunctionHost", "src\Microsoft.Bot.Builder.Runtime.Functions\Microsoft.Bot.Builder.Runtime.FunctionHost.csproj", "{AA55A7C3-D64A-4FDF-9B33-D57DBF79593E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

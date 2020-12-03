@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Rest.Serialization;
 using Newtonsoft.Json;
 
-namespace Microsoft.Bot.Builder.Runtime.Functions
+namespace Microsoft.Bot.Builder.Runtime.FunctionHost
 {
     internal class ActivitySerializationSettings
     {

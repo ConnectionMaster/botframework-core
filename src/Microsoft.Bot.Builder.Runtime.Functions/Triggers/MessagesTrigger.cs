@@ -10,7 +10,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 
-namespace Microsoft.Bot.Builder.Runtime.Functions
+namespace Microsoft.Bot.Builder.Runtime.FunctionHost.Triggers
 {
     /// <summary>
     /// Functions trigger for Bot Framework messages.

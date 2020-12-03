@@ -61,7 +61,9 @@ namespace Microsoft.Bot.Builder.Runtime.Providers.Adapter
                 }
             });
 
-            // Foo.
+            // In addition to registering the CoreBotAdapter as the implementation for the IBotFrameworkHttpAdapter,
+            // some classes depend upon the BotAdapter type. To support this, we ensure that the registered adapter
+            // is returned if BotAdapter is requested from the service provider.
 
             services.AddSingleton<IBotFrameworkHttpAdapter, CoreBotAdapter>();
             services.AddSingleton<BotAdapter>(

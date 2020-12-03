@@ -46,12 +46,7 @@ namespace Microsoft.Bot.Builder.Runtime
                 this.Use(middleware.Build(services, configuration));
             }
 
-            this.OnTurnError = async (turnContext, exception) =>
-            {
-                await turnContext.SendActivityAsync(exception.Message).ConfigureAwait(false);
-                await conversationState.ClearStateAsync(turnContext).ConfigureAwait(false);
-                await conversationState.SaveChangesAsync(turnContext).ConfigureAwait(false);
-            };
+            this.OnTurnError = options.Value.OnTurnError.Build(services, configuration);
         }
     }
 }

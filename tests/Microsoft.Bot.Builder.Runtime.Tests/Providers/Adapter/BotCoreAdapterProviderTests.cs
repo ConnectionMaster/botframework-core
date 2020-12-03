@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Builder.Runtime.Builders.Handlers;
 using Microsoft.Bot.Builder.Runtime.Builders.Middleware;
 using Microsoft.Bot.Builder.Runtime.Providers.Adapter;
 using Microsoft.Bot.Builder.Runtime.Settings;
@@ -21,7 +21,8 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers.Adapter
         {
             yield return new object[]
             {
-                (IList<IMiddlewareBuilder>)Array.Empty<IMiddlewareBuilder>()
+                (IList<IMiddlewareBuilder>)Array.Empty<IMiddlewareBuilder>(),
+                (IOnTurnErrorHandlerBuilder)null
             };
 
             yield return new object[]
@@ -29,13 +30,14 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers.Adapter
                 new List<IMiddlewareBuilder>
                 {
                     new InspectionMiddlewareBuilder()
-                }
+                },
+                new OnTurnErrorHandlerBuilder()                
             };
         }
 
         [Theory]
         [MemberData(nameof(GetConfigureServicesSucceedsData))]
-        public void ConfigureServices_Succeeds(IList<IMiddlewareBuilder> middleware)
+        public void ConfigureServices_Succeeds(IList<IMiddlewareBuilder> middleware, IOnTurnErrorHandlerBuilder onTurnError)
         {
             var services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();
@@ -53,6 +55,11 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers.Adapter
                 adapterProvider.Middleware.Add(m);
             }
 
+            if (onTurnError != null)
+            {
+                adapterProvider.OnTurnError = onTurnError;
+            }
+
             adapterProvider.ConfigureServices(services, configuration);
 
             IServiceProvider provider = services.BuildServiceProvider();
@@ -66,6 +73,8 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers.Adapter
                     {
                         Assert.Equal(expected: adapterProvider.Middleware[i], actual: options.Middleware[i]);
                     }
+
+                    Assert.Equal(expected: adapterProvider.OnTurnError, actual: options.OnTurnError);
                 });
 
             Assertions.AssertService<IBotFrameworkHttpAdapter, CoreBotAdapter>(

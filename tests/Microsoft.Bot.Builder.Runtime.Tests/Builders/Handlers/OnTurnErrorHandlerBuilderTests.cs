@@ -33,13 +33,6 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Builders.Handlers
                 (ConversationState)new ConversationState(new MemoryStorage()),
                 (IConfiguration)TestDataGenerator.BuildConfigurationRoot()
             };
-
-            yield return new object[]
-{
-                (ILogger<IBotFrameworkHttpAdapter>)new Mock<ILogger<BotFrameworkHttpAdapter>>(),
-                (ConversationState)new ConversationState(new MemoryStorage()),
-                (IConfiguration)TestDataGenerator.BuildConfigurationRoot()
-};
         }
 
         [Fact]

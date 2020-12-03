@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using Microsoft.Bot.Builder.Runtime.Builders.Handlers;
 using Microsoft.Bot.Builder.Runtime.Builders.Middleware;
-using Microsoft.Bot.Builder.Runtime.Builders.OnTurnError;
 
 namespace Microsoft.Bot.Builder.Runtime.Settings
 {

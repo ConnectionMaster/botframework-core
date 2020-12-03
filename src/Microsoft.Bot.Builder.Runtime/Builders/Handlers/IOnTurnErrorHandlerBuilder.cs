@@ -4,7 +4,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Microsoft.Bot.Builder.Runtime.Builders.OnTurnError
+namespace Microsoft.Bot.Builder.Runtime.Builders.Handlers
 {
     public interface IOnTurnErrorHandlerBuilder : IBuilder<Func<ITurnContext, Exception, Task>>
     {

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 
-namespace Microsoft.Bot.Builder.Runtime.Builders.OnTurnError
+namespace Microsoft.Bot.Builder.Runtime.Builders.Handlers
 {
     /// <summary>
     /// When added, this configures an OnTurnError implementation for your bot adapter.

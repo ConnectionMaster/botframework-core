@@ -6,14 +6,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Adapters;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
-using Microsoft.Bot.Builder.Runtime.Builders.OnTurnError;
+using Microsoft.Bot.Builder.Runtime.Builders.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Xunit;
 
-namespace Microsoft.Bot.Builder.Runtime.Tests.Builders.OnTurnError
+namespace Microsoft.Bot.Builder.Runtime.Tests.Builders.Handlers
 {
     public class OnTurnErrorHandlerBuilderTests
     {
@@ -32,6 +33,13 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Builders.OnTurnError
                 (ConversationState)new ConversationState(new MemoryStorage()),
                 (IConfiguration)TestDataGenerator.BuildConfigurationRoot()
             };
+
+            yield return new object[]
+{
+                (ILogger<IBotFrameworkHttpAdapter>)new Mock<ILogger<BotFrameworkHttpAdapter>>(),
+                (ConversationState)new ConversationState(new MemoryStorage()),
+                (IConfiguration)TestDataGenerator.BuildConfigurationRoot()
+};
         }
 
         [Fact]

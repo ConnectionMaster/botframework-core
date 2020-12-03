@@ -1,27 +1,25 @@
 {
-  "adapters": [
-    {
-      "$kind": "Microsoft.BotCoreAdapter",
-      "middleware": [
-        {
-          "$kind": "Microsoft.TranscriptLoggerMiddleware",
-          "transcriptStore": {
-            "$kind": "Microsoft.BlobsTranscriptStore",
-            "connectionString": "=blobStorage.connectionString",
-            "containerName": "=blobStorage.container"
-          }
-        },
-        {
-          "$kind": "Microsoft.ShowTypingMiddleware",
-          "delay": 500,
-          "period": 2000
-        },
-        {
-          "$kind": "Microsoft.RemoveRecipientMentionMiddleware"
+  "adapter": {
+    "$kind": "Microsoft.BotCoreAdapter",
+    "middleware": [
+      {
+        "$kind": "Microsoft.TranscriptLoggerMiddleware",
+        "transcriptStore": {
+          "$kind": "Microsoft.BlobsTranscriptStore",
+          "connectionString": "=blobStorage.connectionString",
+          "containerName": "=blobStorage.container"
         }
-      ]
-    }
-  ],
+      },
+      {
+        "$kind": "Microsoft.ShowTypingMiddleware",
+        "delay": 500,
+        "period": 2000
+      },
+      {
+        "$kind": "Microsoft.RemoveRecipientMentionMiddleware"
+      }
+    ]
+  },
   "channel": {
     "$kind": "Microsoft.DeclarativeChannelProvider",
     "channel": null

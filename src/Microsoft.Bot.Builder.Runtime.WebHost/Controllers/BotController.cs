@@ -2,13 +2,10 @@
 // Licensed under the MIT License.
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Dialogs.Debugging;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 
-namespace Microsoft.Bot.Runtime.WebHost.Controllers
+namespace Microsoft.Bot.Builder.Runtime.WebHost.Controllers
 {
     // This ASP Controller is created to handle a request. Dependency Injection will provide the Adapter and IBot
     // implementation at runtime. Multiple different IBot implementations running at different endpoints can be

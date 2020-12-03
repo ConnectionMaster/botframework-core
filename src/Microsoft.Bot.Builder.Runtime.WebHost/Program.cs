@@ -4,12 +4,11 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Bot.Builder.Runtime;
 using Microsoft.Bot.Builder.Runtime.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace Microsoft.Bot.Runtime.WebHost
+namespace Microsoft.Bot.Builder.Runtime.WebHost
 {
     public class Program
     {

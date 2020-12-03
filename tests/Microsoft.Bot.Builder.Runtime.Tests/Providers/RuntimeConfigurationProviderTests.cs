@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 #if NETCOREAPP2_1
 using Microsoft.AspNetCore.Hosting.Internal;
 #endif
-using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Adaptive;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
@@ -76,89 +75,6 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers
                         { "rootDialog", ResourceId }
                     })
             };
-        }
-
-        [Theory]
-        [MemberData(nameof(GetConfigureServicesSucceedsData))]
-        public void ConfigureServices_Succeeds(
-            IList<IAdapterProvider> adapters,
-            IChannelProvider channel,
-            ICredentialProvider credential,
-            string defaultLocale,
-            StringExpression rootDialog,
-            IStorageProvider storage,
-            ITelemetryProvider telemetry,
-            IConfiguration configuration)
-        {
-            var services = new ServiceCollection();
-
-            services.AddTransient<IConfiguration>(_ => configuration);
-#if NETCOREAPP2_1
-            services.AddTransient<IHostingEnvironment, HostingEnvironment>();
-#elif NETCOREAPP3_1
-            services.AddTransient<IHostingEnvironment, TestHostingEnvironment>();
-#endif
-            services.AddTransient<ResourceExplorer>(_ => TestDataGenerator.BuildMemoryResourceExplorer(new[]
-            {
-                new JsonResource(ResourceId, data: BuildDialog())
-            }));
-
-            var runtimeConfigurationProvider = new RuntimeConfigurationProvider
-            {
-                Channel = channel,
-                Credentials = credential,
-                DefaultLocale = defaultLocale,
-                RootDialog = rootDialog,
-                Storage = storage,
-                Telemetry = telemetry
-            };
-
-            foreach (IAdapterProvider adapter in adapters)
-            {
-                runtimeConfigurationProvider.Adapters.Add(adapter);
-            }
-
-            runtimeConfigurationProvider.ConfigureServices(services, configuration);
-
-            IServiceProvider provider = services.BuildServiceProvider();
-
-            Assertions.AssertService<AuthenticationConfiguration>(
-                services,
-                provider,
-                ServiceLifetime.Singleton);
-
-            Assertions.AssertService<ConversationState>(
-                services,
-                provider,
-                ServiceLifetime.Singleton);
-
-            Assertions.AssertService<UserState>(
-                services,
-                provider,
-                ServiceLifetime.Singleton);
-
-            Assertions.AssertService<SkillConversationIdFactoryBase, SkillConversationIdFactory>(
-                services,
-                provider,
-                ServiceLifetime.Singleton);
-
-            Assertions.AssertOptions<CoreBotOptions>(
-                provider,
-                assert: (options) =>
-                {
-                    Assert.Equal(expected: defaultLocale, actual: options.DefaultLocale);
-                    Assert.Equal(expected: ResourceId, actual: options.RootDialog);
-                });
-
-            Assertions.AssertService<IBot, CoreBot>(
-                services,
-                provider,
-                ServiceLifetime.Singleton);
-
-            Assertions.AssertService<ChannelServiceHandler, SkillHandler>(
-                services,
-                provider,
-                ServiceLifetime.Singleton);
         }
 
         [Theory]
@@ -291,6 +207,89 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers
 
                     Assert.Equal(expected: ResourceId, actual: exception.ParamName);
                 });
+        }
+
+        [Theory]
+        [MemberData(nameof(GetConfigureServicesSucceedsData))]
+        internal void ConfigureServices_Succeeds(
+            IList<IAdapterProvider> adapters,
+            IChannelProvider channel,
+            ICredentialProvider credential,
+            string defaultLocale,
+            StringExpression rootDialog,
+            IStorageProvider storage,
+            ITelemetryProvider telemetry,
+            IConfiguration configuration)
+        {
+            var services = new ServiceCollection();
+
+            services.AddTransient<IConfiguration>(_ => configuration);
+#if NETCOREAPP2_1
+            services.AddTransient<IHostingEnvironment, HostingEnvironment>();
+#elif NETCOREAPP3_1
+            services.AddTransient<IHostingEnvironment, TestHostingEnvironment>();
+#endif
+            services.AddTransient<ResourceExplorer>(_ => TestDataGenerator.BuildMemoryResourceExplorer(new[]
+            {
+                new JsonResource(ResourceId, data: BuildDialog())
+            }));
+
+            var runtimeConfigurationProvider = new RuntimeConfigurationProvider
+            {
+                Channel = channel,
+                Credentials = credential,
+                DefaultLocale = defaultLocale,
+                RootDialog = rootDialog,
+                Storage = storage,
+                Telemetry = telemetry
+            };
+
+            foreach (IAdapterProvider adapter in adapters)
+            {
+                runtimeConfigurationProvider.Adapters.Add(adapter);
+            }
+
+            runtimeConfigurationProvider.ConfigureServices(services, configuration);
+
+            IServiceProvider provider = services.BuildServiceProvider();
+
+            Assertions.AssertService<AuthenticationConfiguration>(
+                services,
+                provider,
+                ServiceLifetime.Singleton);
+
+            Assertions.AssertService<ConversationState>(
+                services,
+                provider,
+                ServiceLifetime.Singleton);
+
+            Assertions.AssertService<UserState>(
+                services,
+                provider,
+                ServiceLifetime.Singleton);
+
+            Assertions.AssertService<SkillConversationIdFactoryBase, SkillConversationIdFactory>(
+                services,
+                provider,
+                ServiceLifetime.Singleton);
+
+            Assertions.AssertOptions<CoreBotOptions>(
+                provider,
+                assert: (options) =>
+                {
+                    Assert.Equal(expected: defaultLocale, actual: options.DefaultLocale);
+                    Assert.Equal(expected: ResourceId, actual: options.RootDialog);
+                });
+
+            Assertions.AssertService<IBot, CoreBot>(
+                services,
+                provider,
+                ServiceLifetime.Singleton);
+
+            Assertions.AssertService<ChannelServiceHandler, SkillHandler>(
+                services,
+                provider,
+                ServiceLifetime.Singleton);
         }
 
         private static AdaptiveDialog BuildDialog(string dialogId = null)

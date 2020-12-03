@@ -14,7 +14,7 @@ namespace Microsoft.Bot.Builder.Runtime.Builders.Transcripts
     /// of <see cref="FileTranscriptLogger"/>.
     /// </summary>
     [JsonObject]
-    public class FileTranscriptLoggerBuilder : ITranscriptLoggerBuilder
+    internal class FileTranscriptLoggerBuilder : ITranscriptLoggerBuilder
     {
         /// <summary>
         /// Class identifier.

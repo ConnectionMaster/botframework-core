@@ -9,7 +9,7 @@ namespace Microsoft.Bot.Builder.Runtime.Settings
     /// <summary>
     /// Defines options to be supplied to <see cref="CoreBotAdapter"/>.
     /// </summary>
-    public class CoreBotAdapterOptions
+    internal class CoreBotAdapterOptions
     {
         /// <summary>
         /// Gets the collection of <see cref="IMiddlewareBuilder"/> instances used to construct the

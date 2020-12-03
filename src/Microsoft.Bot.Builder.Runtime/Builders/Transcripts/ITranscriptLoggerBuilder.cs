@@ -7,7 +7,7 @@ namespace Microsoft.Bot.Builder.Runtime.Builders.Transcripts
     /// Defines an interface for an implementation of <see cref="IBuilder{T}"/> that returns an
     /// instance whose type implements <see cref="ITranscriptLogger"/>.
     /// </summary>
-    public interface ITranscriptLoggerBuilder : IBuilder<ITranscriptLogger>
+    internal interface ITranscriptLoggerBuilder : IBuilder<ITranscriptLogger>
     {
     }
 }

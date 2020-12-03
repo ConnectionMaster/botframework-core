@@ -17,7 +17,7 @@ namespace Microsoft.Bot.Builder.Runtime.Providers.Adapter
     /// <see cref="CoreBotAdapter"/> with the application's service collection.
     /// </summary>
     [JsonObject]
-    public class BotCoreAdapterProvider : IAdapterProvider
+    internal class BotCoreAdapterProvider : IAdapterProvider
     {
         /// <summary>
         /// Class identifier.

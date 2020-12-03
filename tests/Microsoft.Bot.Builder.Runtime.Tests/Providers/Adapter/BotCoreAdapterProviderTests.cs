@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Runtime.Builders.Middleware;
 using Microsoft.Bot.Builder.Runtime.Providers.Adapter;
@@ -34,8 +33,22 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers.Adapter
         }
 
         [Theory]
+        [MemberData(
+            nameof(ProviderTestDataGenerator.GetConfigureServicesArgumentNullExceptionData),
+            MemberType = typeof(ProviderTestDataGenerator))]
+        public void ConfigureServices_Throws_ArgumentNullException(
+            string paramName,
+            IServiceCollection services,
+            IConfiguration configuration)
+        {
+            Assert.Throws<ArgumentNullException>(
+                paramName,
+                () => new BotCoreAdapterProvider().ConfigureServices(services, configuration));
+        }
+
+        [Theory]
         [MemberData(nameof(GetConfigureServicesSucceedsData))]
-        public void ConfigureServices_Succeeds(IList<IMiddlewareBuilder> middleware)
+        internal void ConfigureServices_Succeeds(IList<IMiddlewareBuilder> middleware)
         {
             var services = new ServiceCollection();
             IConfiguration configuration = TestDataGenerator.BuildConfigurationRoot();
@@ -77,20 +90,6 @@ namespace Microsoft.Bot.Builder.Runtime.Tests.Providers.Adapter
                 services,
                 provider,
                 ServiceLifetime.Singleton);
-        }
-
-        [Theory]
-        [MemberData(
-            nameof(ProviderTestDataGenerator.GetConfigureServicesArgumentNullExceptionData),
-            MemberType = typeof(ProviderTestDataGenerator))]
-        public void ConfigureServices_Throws_ArgumentNullException(
-            string paramName,
-            IServiceCollection services,
-            IConfiguration configuration)
-        {
-            Assert.Throws<ArgumentNullException>(
-                paramName,
-                () => new BotCoreAdapterProvider().ConfigureServices(services, configuration));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Microsoft.Bot.Builder.Runtime.Providers
     /// services using various <see cref="IProvider"/> objects as derived from the runtime definition.
     /// </summary>
     [JsonObject]
-    public class RuntimeConfigurationProvider : IProvider
+    internal class RuntimeConfigurationProvider : IProvider
     {
         /// <summary>
         /// Gets the collection of <see cref="IAdapterProvider"/> instances to utilize for configuring

@@ -7,7 +7,7 @@ using Microsoft.Bot.Builder.Runtime.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Bot.Runtime.WebHost
+namespace Microsoft.Bot.Builder.Runtime.WebHost
 {
     public class Startup
     {

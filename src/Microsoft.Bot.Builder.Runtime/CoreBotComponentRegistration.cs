@@ -20,7 +20,7 @@ namespace Microsoft.Bot.Builder.Runtime
     /// <summary>
     /// <see cref="ComponentRegistration"/> implementation for standard bot runtime components.
     /// </summary>
-    public class CoreBotComponentRegistration : ComponentRegistration, IComponentDeclarativeTypes
+    internal class CoreBotComponentRegistration : ComponentRegistration, IComponentDeclarativeTypes
     {
         /// <summary>
         /// Gets standard bot runtime <see cref="DeclarativeType"/> resources.

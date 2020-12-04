@@ -7,9 +7,11 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 
 namespace Microsoft.Bot.Builder.Runtime.WebHost.Controllers
 {
-    // This ASP Controller is created to handle a request. Dependency Injection will provide the Adapter and IBot
-    // implementation at runtime. Multiple different IBot implementations running at different endpoints can be
-    // achieved by specifying a more specific type for the bot constructor argument.
+    /// <summary>
+    /// This ASP Controller is created to handle a request. Dependency Injection will provide the Adapter and IBot
+    /// implementation at runtime. Multiple different IBot implementations running at different endpoints can be
+    /// achieved by specifying a more specific type for the bot constructor argument.
+    /// </summary>
     [Route("api/messages")]
     [ApiController]
     public class BotController : ControllerBase

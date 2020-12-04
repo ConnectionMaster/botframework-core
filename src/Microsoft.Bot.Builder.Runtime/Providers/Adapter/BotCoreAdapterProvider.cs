@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Builder.Runtime.Builders.Handlers;
 using Microsoft.Bot.Builder.Runtime.Builders.Middleware;
 using Microsoft.Bot.Builder.Runtime.Settings;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,9 @@ namespace Microsoft.Bot.Builder.Runtime.Providers.Adapter
         [JsonProperty("middleware")]
         public IList<IMiddlewareBuilder> Middleware { get; } = new List<IMiddlewareBuilder>();
 
+        [JsonProperty("onTurnError")]
+        public IOnTurnErrorHandlerBuilder OnTurnError { get; set; } = new OnTurnErrorHandlerBuilder();
+
         /// <summary>
         /// Register services with the application's service collection.
         /// </summary>
@@ -59,6 +63,8 @@ namespace Microsoft.Bot.Builder.Runtime.Providers.Adapter
                 {
                     o.Middleware.Add(middleware);
                 }
+
+                o.OnTurnError = this.OnTurnError;
             });
 
             // In addition to registering the CoreBotAdapter as the implementation for the IBotFrameworkHttpAdapter,

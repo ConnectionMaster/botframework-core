@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using Microsoft.Bot.Builder.Runtime.Builders.Handlers;
 using Microsoft.Bot.Builder.Runtime.Builders.Middleware;
 
 namespace Microsoft.Bot.Builder.Runtime.Settings
@@ -20,5 +21,14 @@ namespace Microsoft.Bot.Builder.Runtime.Settings
         /// middleware pipeline for the adapter.
         /// </value>
         public IList<IMiddlewareBuilder> Middleware { get; } = new List<IMiddlewareBuilder>();
+
+        /// <summary>
+        /// Gets or sets the builder responsible for providing a handler for the OnTurnError event
+        /// within the adapter.
+        /// </summary>
+        /// <value>
+        /// The builder responsible for providing a handler for the OnTurnError event within the adapter.
+        /// </value>
+        public IOnTurnErrorHandlerBuilder OnTurnError { get; set; } = new OnTurnErrorHandlerBuilder();
     }
 }

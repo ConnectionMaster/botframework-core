@@ -16,7 +16,7 @@ namespace Microsoft.Bot.Builder.Runtime.Providers.Storage
     /// <see cref="CosmosDbPartitionedStorage"/> with the application's service collection.
     /// </summary>
     [JsonObject]
-    public class CosmosDbPartitionedStorageProvider : IStorageProvider
+    internal class CosmosDbPartitionedStorageProvider : IStorageProvider
     {
         /// <summary>
         /// Class identifier.

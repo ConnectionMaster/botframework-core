@@ -18,7 +18,10 @@ namespace Microsoft.Bot.Builder.Runtime.FunctionHost
 
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder configurationBuilder)
         {
-            var isDevelopment = string.Equals(configurationBuilder.GetContext().EnvironmentName, Microsoft.Extensions.Hosting.Environments.Development, StringComparison.OrdinalIgnoreCase);
+            var isDevelopment = string.Equals(
+                configurationBuilder.GetContext().EnvironmentName,
+                Microsoft.Extensions.Hosting.Environments.Development,
+                StringComparison.OrdinalIgnoreCase);
             var applicationRoot = configurationBuilder.GetContext().ApplicationRootPath;
 
             configurationBuilder.ConfigurationBuilder.AddBotRuntimeConfiguration(applicationRoot, isDevelopment);
